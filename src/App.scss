@@ -1,0 +1,25 @@
+.or {
+    position: relative;
+
+    &::after {
+        content: '';
+        position: absolute;
+        top: 50%;
+        left: 0;
+        width: 120px;
+        height: 1px;
+        background-color: hsl(var(--input));
+
+    }
+
+    &::before {
+        content: '';
+        position: absolute;
+        top: 50%;
+        right: 0;
+        width: 120px;
+        height: 1px;
+        background-color: hsl(var(--input));
+
+    }
+}
