@@ -9,7 +9,11 @@ const API = axios.create(options);
 
 // Interceptor for responses
 API.interceptors.response.use(
-    (response) => response.data, // Return only the response data
+    (response) => {
+        console.log(response.data)
+        return response.data; // Return only the response data
+    }, // Return only the response data
+
     (error) => {
         const { status, data } = error.response
         console.log(status, data)
