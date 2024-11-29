@@ -41,7 +41,7 @@ const ResetPassword = () => {
 
   const { register, handleSubmit, formState: { errors }, reset, } = form;
 
-  const { mutate, isSuccess, isError } = useMutation({
+  const { mutate, isSuccess } = useMutation({
     mutationFn: async (data: any) => { resetPassword(data) },
     onSuccess: () => {
 
