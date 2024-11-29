@@ -1,4 +1,3 @@
-import { accessSync } from "fs";
 import { LoginData, FormData } from "../utils/types";
 import API from "./apiClient";
 import { AxiosResponse } from 'axios';

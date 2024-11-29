@@ -1,5 +1,5 @@
 import { IoLockClosedOutline } from "react-icons/io5";
-import { Link, useNavigate, useSearchParams } from "react-router-dom"
+import { Link,  useSearchParams } from "react-router-dom"
 import { Button } from "../components/ui/button";
 import { useMutation } from "@tanstack/react-query";
 import { zodResolver } from "@hookform/resolvers/zod";
