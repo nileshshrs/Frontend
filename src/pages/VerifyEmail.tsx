@@ -14,10 +14,10 @@ const VerifyEmail = () => {
     const { code } = useParams()
 
 
-    const { isLoading, isError, isSuccess, data, error } = useQuery({
+    const { isSuccess, } = useQuery({
         queryKey: ["emailVerification", code], // Differentiate queries by code
         queryFn: () => verifyEmail(code!), // Make sure code is passed into the function
-        onError: (error: any) => console.error("Error:", error.message), // Log error globally
+        onError: (error: any) => console.error("Error:", error.message), // Log error globally  
     });
 
 
@@ -28,17 +28,17 @@ const VerifyEmail = () => {
                     !isSuccess ? <CardContent>
                         <CardHeader className="flex-col items-center justify-center gap-5">
                             <CardTitle>Email Verification.</CardTitle>
-                            <CardDescription>Your email has been verified successfully.</CardDescription>
+                            <CardDescription className="text-center">Your email has been verified successfully.</CardDescription>
                         </CardHeader>
                         <CardFooter className="flex items-center justify-center">
-                            <Link to="/sign-in" className="text-primary text-sm font-bold">
-                                Sign in
+                            <Link to="/" className="text-primary text-sm font-bold" replace>
+                                Home
                             </Link>
                         </CardFooter>
                     </CardContent> : < CardContent className="flex-col items-center justify-center" >
                         <CardHeader className="flex-col items-center justify-center gap-5">
                             <CardTitle>Email Verification.</CardTitle>
-                            <CardDescription>There was an error verifying your email.</CardDescription>
+                            <CardDescription className="text-center">There was an error verifying your email.</CardDescription>
                         </CardHeader>
                         <CardFooter className="flex items-center justify-center">
                             <Link to="#" className="text-destructive text-sm font-bold">

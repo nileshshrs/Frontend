@@ -90,6 +90,7 @@ const Registration = () => {
             className='font-medium placeholder:font-light'
             placeholder='email'
             {...register("email")}
+            autoComplete="off"
           />
           {errors.email && (
             <p className="text-red-500 text-[12px] mt-1">{errors.email.message}</p>
@@ -100,6 +101,7 @@ const Registration = () => {
             className='font-medium placeholder:font-light'
             placeholder='username'
             {...register("username")}
+            autoComplete="off"
           />
           {errors.username && (
             <p className="text-red-500 text-[12px] mt-1">{errors.username.message}</p>

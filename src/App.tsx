@@ -9,6 +9,7 @@ import { Route, Routes } from "react-router-dom";
 import Home from "./pages/Home";
 import ForgotPassword from "./pages/ForgotPassword";
 import VerifyEmail from "./pages/VerifyEmail";
+import ResetPassword from "./pages/ResetPassword";
 
 
 function App() {
@@ -35,6 +36,7 @@ function App() {
           <Route path="/sign-in" element={<Login />} />
           <Route path="/sign-up" element={<Registration />} />
           <Route path="/forgot-password" element={<ForgotPassword />} />
+          <Route path="/password/reset" element={<ResetPassword />} />
           <Route path="/email-verification/:code" element={<VerifyEmail />} />
         </Routes>
       </div >

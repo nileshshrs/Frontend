@@ -1,3 +1,4 @@
+import { accessSync } from "fs";
 import { LoginData, FormData } from "../utils/types";
 import API from "./apiClient";
 import { AxiosResponse } from 'axios';
@@ -35,4 +36,11 @@ export const verifyEmail = async (verificationCode: string): Promise<any> => {
         console.error("Error verifying email:", e.message || e);
         return { error: true, message: e.message || "Error verifying email." }; // Return an error response
     }
+};
+
+
+export const forgotPassword = async (email: any) => await API.post(`/auth/account-recovery`, email)
+export const resetPassword = async (request: any) => {
+    console.log(request)
+    await API.post(`/auth/reset-password`, request)
 };
