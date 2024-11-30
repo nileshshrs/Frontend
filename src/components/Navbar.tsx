@@ -1,13 +1,12 @@
 import { Link, useLocation } from "react-router-dom";
-import { Button } from "./ui/button";
 import { FaRegCompass, FaRegPlusSquare, FaSearch } from "react-icons/fa";
 import { IoChatbubbles, IoNotifications, IoPersonSharp } from "react-icons/io5";
-import { SlMenu } from "react-icons/sl";
 import { toggler } from "../utils/types";
+import Settings from "./Settings";
 
-const Navbar = ({ isCollapsed,  onNotificationToggle }: toggler) => {
+const Navbar = ({ isCollapsed, onNotificationToggle }: toggler) => {
 
-    
+
     const location = useLocation();
     const pathname = location.pathname;
 
@@ -18,7 +17,7 @@ const Navbar = ({ isCollapsed,  onNotificationToggle }: toggler) => {
     return (
         <nav
             className={`sm:grid min-h-screen h-full hidden top-0 left-0 place-items-center py-7 border-r border-gray-300 z-10
-          ${isCollapsed ? "max-w-[70px]" : "max-w-[300px] px-5"} transition-all duration-300 w-full`}
+          ${isCollapsed ? "max-w-[70px]" : "max-w-[300px] px-5"} transition-all duration-300 w-full sticky`}
         >
             <ul className="h-full flex flex-col justify-start gap-5 items-center p-0 content-center w-full">
                 {/* Logo */}
@@ -28,8 +27,8 @@ const Navbar = ({ isCollapsed,  onNotificationToggle }: toggler) => {
 
                 {/* Home Link */}
                 <li className="w-full mt-5 mb-3">
-                    <Link 
-                        to="/" 
+                    <Link
+                        to="/"
                         className={`w-full inline-flex gap-5 items-center ${isCollapsed ? "justify-center" : "justify-start"}`}
                     >
                         <FaRegCompass className="text-2xl" />
@@ -39,8 +38,8 @@ const Navbar = ({ isCollapsed,  onNotificationToggle }: toggler) => {
 
                 {/* Search Button */}
                 <li className="w-full mb-3">
-                    <span 
-                        onClick={toggle} 
+                    <span
+                        onClick={toggle}
                         className={`w-full inline-flex gap-5 items-center ${isCollapsed ? "justify-center" : "justify-start"}`}
                     >
                         <FaSearch className="text-2xl" />
@@ -50,8 +49,8 @@ const Navbar = ({ isCollapsed,  onNotificationToggle }: toggler) => {
 
                 {/* Messages Link */}
                 <li className="w-full mb-3">
-                    <Link 
-                        to="/messages" 
+                    <Link
+                        to="/messages"
                         className={`w-full inline-flex gap-5 items-center ${isCollapsed ? "justify-center" : "justify-start"}`}
                     >
                         <IoChatbubbles className="text-2xl font-bold" />
@@ -61,8 +60,8 @@ const Navbar = ({ isCollapsed,  onNotificationToggle }: toggler) => {
 
                 {/* Notifications Button */}
                 <li className="w-full mb-3">
-                    <span 
-                        onClick={toggle} 
+                    <span
+                        onClick={toggle}
                         className={`w-full inline-flex gap-5 items-center ${isCollapsed ? "justify-center" : "justify-start"}`}
                     >
                         <IoNotifications className="text-2xl font-bold" />
@@ -80,8 +79,8 @@ const Navbar = ({ isCollapsed,  onNotificationToggle }: toggler) => {
 
                 {/* User Profile Link */}
                 <li className="w-full mb-3">
-                    <Link 
-                        to="/profile" 
+                    <Link
+                        to="/profile"
                         className={`inline-flex w-full gap-5 items-center ${isCollapsed ? "justify-center" : "justify-start"}`}
                     >
                         <IoPersonSharp className="text-2xl font-bold" />
@@ -91,10 +90,8 @@ const Navbar = ({ isCollapsed,  onNotificationToggle }: toggler) => {
             </ul>
 
             {/* Menu Button */}
-            <div className="flex items-end h-full w-full">
-                <Button variant="ghost">
-                    <SlMenu className="text-5xl font-bold" />
-                </Button>
+            <div className="flex items-end h-full w-full justify-start">
+                <Settings />
             </div>
         </nav>
     );

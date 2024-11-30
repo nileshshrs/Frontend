@@ -50,7 +50,7 @@ const Main = () => {
     return isLoading ? (
         <div>Loading...</div>
     ) : user ? (
-        <div className="flex min-h-screen overflow-x-hidden relative gap-5">
+        <div className="flex min-h-screen relative gap-5">
             {/* Navbar (Main Sidebar) */}
             <Navbar
                 isCollapsed={isMobileView || isCollapsed} // Always collapsed in mobile view

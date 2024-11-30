@@ -63,3 +63,15 @@ export const getUserProfile = async (): Promise<any> => {
         throw e.message;
     }
 };
+
+export const getSessions = async (): Promise<any> => API.get("/session/getSessionsByUser")
+export const deleteSession = async (id: string): Promise<any> => {
+    try {
+        const res = API.delete(`/session/delete/${id}`)
+        console.log(res)
+        return res
+    }
+    catch (e: any) {
+        console.log(e)
+    }
+}
