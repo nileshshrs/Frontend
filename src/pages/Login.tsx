@@ -8,7 +8,7 @@ import { login } from '../api/api';
 
 const Login = () => {
     const { theme } = useTheme();
-    const logoSrc = theme ? '/image/logo-light.png' : '/image/logo-dark.png';
+    const logoSrc = theme==='light' ? '/image/logo-light.png' : '/image/logo-dark.png';
     const [usernameOrEmail, setUsernameOrEmail] = useState<string>(""); // Use 'string' instead of 'String'
     const [password, setPassword] = useState<string>(""); // Use 'string' instead of 'String'
     const navigate = useNavigate();

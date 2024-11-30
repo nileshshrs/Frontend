@@ -71,7 +71,7 @@ const Registration = () => {
     },
 
   })
-  const logoSrc = theme ? '/image/logo-light.png' : '/image/logo-dark.png';
+  const logoSrc = theme === 'light' ? '/image/logo-light.png' : '/image/logo-dark.png';
   return (
     <main className='h-screen grid place-content-center place-items-center gap-10'>
       <form

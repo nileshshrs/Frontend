@@ -34,14 +34,14 @@ const ForgotPassword = () => {
         if (!isValid) {
             return;
         }
-        mutate(data)
+        mutate(data.email)
         reset(); // Reset form after successful submission
     };
 
     const { register, handleSubmit, formState: { errors }, reset, } = form;
 
     const { mutate, isSuccess, isError } = useMutation({
-        mutationFn: (data: FormData) => forgotPassword(data),
+        mutationFn: (data: string) => forgotPassword(data),
     })
     //react hook form
     return (
@@ -102,7 +102,7 @@ const ForgotPassword = () => {
                             </div>
                             <div className='text-sm font-bold flex items-center justify-center p-3'>
                                 <Link to="/sign-in">
-                                   sign in
+                                    sign in
                                 </Link>
                             </div>
                         </form>
