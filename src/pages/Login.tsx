@@ -1,4 +1,4 @@
-import { Link, useNavigate } from 'react-router-dom';
+import { Link, useLocation, useNavigate } from 'react-router-dom';
 import { Button } from '../components/ui/button';
 import { Input } from '../components/ui/input';
 import { useState } from 'react';
@@ -12,21 +12,15 @@ const Login = () => {
     const [usernameOrEmail, setUsernameOrEmail] = useState<string>(""); // Use 'string' instead of 'String'
     const [password, setPassword] = useState<string>(""); // Use 'string' instead of 'String'
     const navigate = useNavigate();
+    const location = useLocation()
+    const redirectUrl = location.state?.redirectUrl || "/"
 
     const { mutate: signIn, isError } = useMutation({
         mutationFn: login,
-        onSuccess: () => navigate('/', { replace: true }),
+        onSuccess: () => navigate(redirectUrl, { replace: true }),
         onError: (error) => console.log(error),
     })
 
-    // const signIn = async (usernameOrEmail: string, password: string) => {
-    //     try {
-    //         const res = await axios.post("http://localhost:6278/api/v1/auth/sign-in", { usernameOrEmail, password })
-    //         console.log(res)
-    //     } catch (error) {
-    //         console.log(error)
-    //     }
-    // }
     return (
         <main className='h-screen grid place-content-center place-items-center gap-10'>
             <form className='w-full sm:w-80 md:w-96 border-0 md:border-[0.5px] h-auto px-12 py-12 grid gap-5 shadow-lg'>

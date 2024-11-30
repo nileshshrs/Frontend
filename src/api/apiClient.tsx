@@ -1,24 +1,46 @@
-import axios from 'axios';
+import axios from "axios";
+import { queryClient } from "../main";
+import { navigate } from "../utils/navigation";
 
 const options = {
     baseURL: "http://localhost:6278/api/v1",
     withCredentials: true,
-}
+};
 
 const API = axios.create(options);
 
+const TokenRefreshClient = axios.create(options);
+TokenRefreshClient.interceptors.response.use(
+    (response) => {
+        console.log(response.data);
+        return response.data; // Return only the response data
+    },
+)
 // Interceptor for responses
 API.interceptors.response.use(
     (response) => {
-        console.log(response.data)
+        console.log(response.data);
         return response.data; // Return only the response data
-    }, // Return only the response data
+    },
+    async (error) => {
+        const { config, response } = error
+        const { status, data } = response || {};
 
-    (error) => {
-        const { status, data } = error.response
-        console.log(status, data)
-        // Handle error globally
-        return Promise.reject({ status, ...data }); // Reject the error to propagate it to the calling function
+        console.error("Interceptor caught error:", status, data);
+
+        if (status === 401 && data?.errorCode === "InvalidAccessToken") {
+            try {
+                await TokenRefreshClient.get("/auth/refresh")
+                return TokenRefreshClient(config)
+            } catch (err) {
+                navigate("/sign-in")
+                queryClient.clear();
+                throw new Error("Token refresh failed")
+            }
+        }
+
+        // Propagate error to calling function
+        return Promise.reject({ status, ...data });
     }
 );
 
