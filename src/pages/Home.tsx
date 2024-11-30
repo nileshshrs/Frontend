@@ -1,8 +1,13 @@
-import React from 'react'
+import UserMenu from "../components/UserMenu"
 
 const Home = () => {
   return (
-    <div>Home</div>
+    <div className='w-full flex gap-5 justify-center'>
+      <div className="w-full max-w-[630px]">
+        posts go here
+      </div>
+      <UserMenu />
+    </div>
   )
 }
 

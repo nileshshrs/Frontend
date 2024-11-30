@@ -8,3 +8,9 @@ export type FormData = {
     username: string;
     password: string;
 }
+
+export type toggler = {
+    isCollapsed: boolean;
+    onToggle: () => void;
+    onNotificationToggle: () => void;
+}

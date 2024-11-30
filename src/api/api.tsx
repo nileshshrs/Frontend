@@ -3,6 +3,16 @@ import API from "./apiClient";
 import { AxiosResponse } from 'axios';
 
 
+export const logout = async () => {
+    try {
+        const res = API.get('/auth/logout')
+        console.log(res)
+        return res; // Ensure you are returning data here
+    } catch (e) {
+        console.log(e)
+        throw e;
+    }
+}
 export const login = async (data: LoginData) => {
     try {
         const response = await API.post("/auth/sign-in", data);
