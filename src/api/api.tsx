@@ -75,3 +75,17 @@ export const deleteSession = async (id: string): Promise<any> => {
         console.log(e)
     }
 }
+
+export const getConversation = async (): Promise<any> => API.get("/conversation/get")
+export const getMessages = async (id: string): Promise<any> => API.get(`/messages/conversation/${id}`)
+
+export const createMessage = async ({ conversationId, recipient, content }: {
+    conversationId: string;
+    recipient: string;
+    content: string;
+}) => await API.post(
+    `/messages/create/${conversationId}`,
+    {
+        recipient,
+        content,
+    })

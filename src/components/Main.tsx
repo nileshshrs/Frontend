@@ -1,11 +1,12 @@
 import { Navigate, Outlet, useLocation } from "react-router-dom";
-import useAuth from "../hooks/useAuth";
 import { useEffect, useState } from "react";
 import Navbar from "./Navbar";
 import NotificationSidebar from "./NotificationSidebar";
+import { useAuthContext } from "../context/AuthContext";
 
 const Main = () => {
-    const { user, isLoading } = useAuth();
+
+    const { user } = useAuthContext();
     const location = useLocation();
     const [isCollapsed, setIsCollapsed] = useState(true); // Default to collapsed
     const [isSecondSidebarVisible, setSecondSidebarVisible] = useState(false);
@@ -28,7 +29,7 @@ const Main = () => {
 
     // Handle route changes and force collapse for /messages
     useEffect(() => {
-        if (location.pathname === "/messages") {
+        if (location.pathname.startsWith("/messages")) {
             setIsCollapsed(true);
             setSecondSidebarVisible(false);
         } else if (!isMobileView) {
@@ -47,9 +48,7 @@ const Main = () => {
         setSecondSidebarVisible(!isSecondSidebarVisible);
     };
 
-    return isLoading ? (
-        <div>Loading...</div>
-    ) : user ? (
+    return user ? (
         <div className="flex min-h-screen relative gap-5">
             {/* Navbar (Main Sidebar) */}
             <Navbar
@@ -59,12 +58,12 @@ const Main = () => {
             />
 
             {/* Notification Sidebar */}
-            <NotificationSidebar
-                isVisible={isSecondSidebarVisible}
-            />
+            <NotificationSidebar isVisible={isSecondSidebarVisible} />
 
             {/* Main Content */}
-            <Outlet />
+            <div className="w-full">
+                <Outlet />
+            </div>
         </div>
     ) : (
         <Navigate to="/sign-in" replace state={{ redirectURL: window.location.pathname }} />

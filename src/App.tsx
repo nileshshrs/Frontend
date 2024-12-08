@@ -11,9 +11,11 @@ import ForgotPassword from "./pages/ForgotPassword";
 import VerifyEmail from "./pages/VerifyEmail";
 import ResetPassword from "./pages/ResetPassword";
 import Main from "./components/Main";
-import Conversation from "./pages/Conversation";
+import Messages from "./pages/Messages";
 import Sessions from "./pages/Sessions";
 import { setNavigate } from "./utils/navigation";
+import Conversation from "./components/Conversation";
+import Message from "./components/Message";
 
 function App() {
     const navigate = useNavigate(); // React Router's navigate function
@@ -37,7 +39,10 @@ function App() {
             <Routes>
                 <Route path="/" element={<Main />}>
                     <Route index element={<Home />} />
-                    <Route path="/messages" element={<Conversation />} />
+                    <Route path="/messages/" element={<Messages />} >
+                        <Route index element={<Conversation />} />
+                        <Route path=":id" element={<Message />} />
+                    </Route>
                     <Route path="/sessions" element={<Sessions />} />
                 </Route>
                 <Route path="/sign-in" element={<Login />} />
