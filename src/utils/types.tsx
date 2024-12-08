@@ -33,15 +33,8 @@ export interface conversation {
 export interface message {
     _id: string;
     conversation: string;
-    sender: {
-        _id: string;
-        name: string;
-
-    };
-    recipient: {
-        _id: string;
-        name: string;
-    };
+    sender: Participant;
+    recipient: Participant;
     type: "text" | "image" | "video" | "file";
     read: boolean;
     content: string;

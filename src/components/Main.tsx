@@ -49,7 +49,7 @@ const Main = () => {
     };
 
     return user ? (
-        <div className="flex min-h-screen relative gap-5">
+        <div className={`flex min-h-screen relative ${location.pathname.startsWith("/message")? "gap-0": "gap-5"}`}>
             {/* Navbar (Main Sidebar) */}
             <Navbar
                 isCollapsed={isMobileView || isCollapsed} // Always collapsed in mobile view

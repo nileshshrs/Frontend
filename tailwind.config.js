@@ -55,6 +55,10 @@ module.exports = {
 			fontFamily: {
 				'style-script': ['"Cedarville Cursive"', 'cursive'],
 			},
+			animation: {
+				spinSlow: 'spin 3s linear infinite', // For slower spin
+				pulse: 'pulse 1.5s ease-in-out infinite', // For pulsing effect
+			  },
 		}
 	},
 	plugins: [require("tailwindcss-animate")],

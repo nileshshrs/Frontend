@@ -2,53 +2,51 @@ import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { createMessage, getMessages } from "../api/api";
 import { useParams } from "react-router-dom";
 import { useAuthContext } from "../context/AuthContext";
-import { useConversationById } from "../hooks/useConversation";
+import { useConversationByUser } from "../hooks/useConversation";
 import { useEffect, useRef, useState } from "react";
 import { Button } from "./ui/button";
-import { io } from "socket.io-client";
 import { message } from "../utils/types";
+import useSocket from "../hooks/useSocket";
+import Loader from "./Loader";
+import ErrorComponent from "./ErrorComponent";
+import { FaCircle } from "react-icons/fa";
+import { FaRegCircle } from "react-icons/fa";
 
 const Message = () => {
   const { id } = useParams<{ id: string }>();
   const { user } = useAuthContext();
   const queryClient = useQueryClient();
+  const { recipientId, recipientName } = useConversationByUser();
+
+  const messagesEndRef = useRef<HTMLDivElement | null>(null);
+  const messageInputRef = useRef<HTMLTextAreaElement | null>(null);
 
   const [messages, setMessages] = useState<message[]>([]);
-  const [socket, setSocket] = useState<any>(null)
 
-  useEffect(() => {
-    const newSocket = io("http://localhost:6278");
-    setSocket(newSocket);
 
-    newSocket.on("connect", () => {
-      console.log(`Connected with socket ID: ${newSocket.id}`);
-    });
-
-    return () => {
-      newSocket.disconnect();
-      console.log("Socket disconnected");
-    };
-  }, [user]);
-
+  const { socket, isRecipientOnline } = useSocket(recipientId)
 
   useEffect(() => {
     if (!socket) return;
 
     socket?.emit("adduser", user._id);
-    socket?.on("getusers", (data:[]) => {
-      console.log("Users:", data);
-    });
+    // const isRecipientOnline = onlineUsers.some(user => user.userID === recipientId);
+    // console.log(isRecipientOnline)
 
+    // Listen for incoming messages
     socket?.on("get", (data: message) => {
-      console.log("socket data", data)
+      console.log("socket data", data);
       if (data.conversation === id) {
-        setMessages(msg => [...msg, data])
+        // Check if the recipient is online
+
+
+        // Update the message list
+        setMessages((msg) => [...msg, data]);
         queryClient.invalidateQueries(['conversations']);
       } else {
         queryClient.invalidateQueries(['conversations']);
       }
     });
-
     return () => {
       socket.disconnect();
       console.log("Socket disconnected");
@@ -84,23 +82,7 @@ const Message = () => {
     },
   });
 
-  const conversation = useConversationById(id);
-  const recipientId =
-    conversation?.participants &&
-      conversation?.participants.length === 2 &&
-      user
-      ? user._id === conversation?.participants[0]._id
-        ? conversation?.participants[1]._id
-        : conversation?.participants[0]._id
-      : null;
 
-  const recipientName =
-    user._id === conversation?.participants[0]._id
-      ? conversation?.participants[1].username
-      : conversation?.participants[0].username;
-
-  const messagesEndRef = useRef<HTMLDivElement | null>(null);
-  const messageInputRef = useRef<HTMLTextAreaElement | null>(null);
 
 
   useEffect(() => {
@@ -129,9 +111,6 @@ const Message = () => {
     messageInputRef.current.value = ""; // Clear the input field
   };
 
-  if (isLoading) return <div>Loading...</div>;
-  if (isError) return <div>Error loading messages</div>;
-
   return (
     <main className="flex flex-col min-h-screen h-full">
       <div>
@@ -140,13 +119,16 @@ const Message = () => {
             <div>
               <img
                 src="https://play-lh.googleusercontent.com/jInS55DYPnTZq8GpylyLmK2L2cDmUoahVacfN_Js_TsOkBEoizKmAl5-p8iFeLiNjtE=w526-h296-rw"
-                alt={recipientName}
+                alt={recipientName ?? "username"}
                 className="h-50 w-50 rounded-full"
                 width={"50px"}
                 height={"50px"}
               />
             </div>
-            <div className="capitalize">{recipientName}</div>
+            <div>
+              <h2 className="capitalize font-bold">{recipientName}</h2>
+              <div className="inline-flex items-center gap-1">{isRecipientOnline ? <FaCircle className="text-md" /> : <FaRegCircle className="text-md" />} {isRecipientOnline ? 'online' : 'offline'}</div>
+            </div>
           </div>
           <div>more info</div>
         </div>
@@ -154,14 +136,14 @@ const Message = () => {
 
       {/* Message Container */}
       <div className="flex flex-col p-7 gap-4 flex-1 overflow-y-auto max-h-[calc(90vh-100px)]">
-        {messages.map((msg: any, index: number) => {
+        {!isError ? isLoading ? <Loader /> : messages.map((msg: message) => {
           const isSender = msg?.sender?._id === user._id;
           const senderName = isSender ? msg.sender.username : msg?.recipient?.username;
 
           return (
             <div
               className={`flex ${isSender ? "flex-row-reverse" : ""} items-end justify-baseline`}
-              key={msg._id || index}
+              key={msg._id}
             >
               <div className={`${isSender ? "ml-4" : "mr-4"}`}>
                 <img
@@ -179,7 +161,9 @@ const Message = () => {
               </div>
             </div>
           );
-        })}
+        }) :
+          <ErrorComponent />
+        }
         <div ref={messagesEndRef} /> {/* This ensures the scroll position is maintained */}
       </div>
 
@@ -203,30 +187,3 @@ const Message = () => {
 };
 
 export default Message;
-// useEffect(() => {
-//   socket.current = io("http://localhost:6278");
-//   socket.current.on("welcome", data => {
-//     console.log(data)
-//   })
-
-//   const handleReconnect = () => {
-//     if (user) {
-//       socket.current.emit("sendUser", user._id); // Re-register user after reconnection
-//     }
-//   };
-
-//   socket.current.on("connect", handleReconnect);
-// }, [user]);
-
-// useEffect(() => {
-//   socket.current = io("http://localhost:6278")
-//   socket.current.on("getmessage", (data) => {
-//     console.log("Received message: ", data);
-//     if (data.conversationID == id) {
-//       setMessages((prevMessages) => [...prevMessages, data]);
-//       queryClient.invalidateQueries(["conversations"]);
-//     } else {
-//       queryClient.invalidateQueries(["conversations"]);
-//     }
-//   })
-// }, []);
