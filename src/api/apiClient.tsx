@@ -33,6 +33,7 @@ API.interceptors.response.use(
                 await TokenRefreshClient.get("/auth/refresh")
                 return TokenRefreshClient(config)
             } catch (err) {
+                localStorage.removeItem("user")
                 navigate("/sign-in")
                 queryClient.clear();
                 throw new Error("Token refresh failed")

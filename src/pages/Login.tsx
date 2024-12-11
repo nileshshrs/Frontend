@@ -1,4 +1,4 @@
-import { Link, useLocation, useNavigate } from 'react-router-dom';
+import { Link } from 'react-router-dom';
 import { Button } from '../components/ui/button';
 import { Input } from '../components/ui/input';
 import { useState } from 'react';
@@ -8,9 +8,9 @@ import { LoginData } from '../utils/types';
 
 const Login = () => {
     const { theme } = useTheme();
-    const { signin } = useSignin()
+    const { signin, isError } = useSignin()
     const logoSrc = theme === 'light' ? '/image/logo-light.png' : '/image/logo-dark.png';
-    const [isError, setisError] = useState(false)
+
     const [usernameOrEmail, setUsernameOrEmail] = useState<string>(""); // Use 'string' instead of 'String'
 
     const [password, setPassword] = useState<string>(""); // Use 'string' instead of 'String'
