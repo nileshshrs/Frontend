@@ -62,8 +62,9 @@ const Registration = () => {
 
   const mutation = useMutation({
     mutationFn: async (data: FormData) => registration(data),
-    onSuccess: () => {
-      navigate("/", { replace: true })
+    onSuccess: (data) => {
+      console.log(data)
+      navigate("/sign-in", { replace: true })
     },
     onError: (error: any) => {
       // console.log(error)

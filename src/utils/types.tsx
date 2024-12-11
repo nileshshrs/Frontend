@@ -42,3 +42,15 @@ export interface message {
 
 }
 
+export type User = {
+    status: string;
+    isOnlineStatus: boolean;
+    _id: string;
+    email: string;
+    username: string;
+    verified: boolean;
+    image: string;  // Assuming it's a URL or empty string
+    __v: number;
+  
+  };
+

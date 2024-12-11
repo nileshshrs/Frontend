@@ -1,25 +1,11 @@
-import { useMutation } from '@tanstack/react-query';
-import { useNavigate } from 'react-router-dom';
-import { logout } from '../api/api';
-import { queryClient } from '../main';
 import { Button } from './ui/button';
 import { RiErrorWarningFill } from "react-icons/ri";
 import { useAuthContext } from '../context/AuthContext';
+import { useLogout } from '../hooks/useLogout';
 
 const UserMenu = () => {
-    const navigate = useNavigate();
     const { user } = useAuthContext();
-    const { mutate: signout } = useMutation({
-        mutationFn: logout,
-        onSuccess: () => {
-            queryClient.clear();
-            // Clear cached queries (if needed)
-            localStorage.removeItem('user');
-            navigate('/sign-in', { replace: true }); // Redirect to login page
-        },
-    });
-
-
+    const {logout} = useLogout()
 
     const { email, username, verified } = user // remember to bring the user image as well later
 
@@ -52,7 +38,7 @@ const UserMenu = () => {
                     <Button
                         className="text-primary font-bold"
                         variant={"ghost"}
-                        onClick={() => signout()} // Call signout function here
+                        onClick={() => logout()} // Call signout function here
                     >
                         Logout
                     </Button>

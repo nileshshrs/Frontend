@@ -3,24 +3,20 @@ import { Button } from '../components/ui/button';
 import { Input } from '../components/ui/input';
 import { useState } from 'react';
 import { useTheme } from '../context/ThemeContext';
-import { useMutation } from '@tanstack/react-query';
-import { login } from '../api/api';
+import { useSignin } from '../hooks/useSignin';
+import { LoginData } from '../utils/types';
 
 const Login = () => {
     const { theme } = useTheme();
-    const logoSrc = theme==='light' ? '/image/logo-light.png' : '/image/logo-dark.png';
+    const { signin } = useSignin()
+    const logoSrc = theme === 'light' ? '/image/logo-light.png' : '/image/logo-dark.png';
+    const [isError, setisError] = useState(false)
     const [usernameOrEmail, setUsernameOrEmail] = useState<string>(""); // Use 'string' instead of 'String'
+
     const [password, setPassword] = useState<string>(""); // Use 'string' instead of 'String'
-    const navigate = useNavigate();
-    const location = useLocation()
-    const redirectUrl = location.state?.redirectUrl || "/"
-
-    const { mutate: signIn, isError } = useMutation({
-        mutationFn: login,
-        onSuccess: () => navigate(redirectUrl, { replace: true }),
-        onError: (error) => console.log(error),
-    })
-
+    const signIn = async (data: LoginData) => {
+        await signin(data);
+    }
     return (
         <main className='h-screen grid place-content-center place-items-center gap-10'>
             <form className='w-full sm:w-80 md:w-96 border-0 md:border-[0.5px] h-auto px-12 py-12 grid gap-5 shadow-lg'>

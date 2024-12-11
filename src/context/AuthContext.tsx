@@ -1,70 +1,57 @@
-import { ReactNode, createContext, useContext, useEffect, useState } from "react";
-import { useQuery, UseQueryOptions } from "@tanstack/react-query";
-import { getUserProfile } from "../api/api";
+import { ReactNode, createContext, useContext, useEffect, useReducer } from "react";
+import { User } from "../utils/types";
 
-export const AUTH = "auth";
 
-// Define the type of data returned by getUserProfile
-type UserProfile = Awaited<ReturnType<typeof getUserProfile>>;
 
-// Define the AuthContext type
-type AuthContextType = {
-  user: UserProfile | null;
-  isLoading: boolean;
-  isError: boolean;
-  error: unknown;
-  setUser: (user: UserProfile | null) => void;
+
+type AuthState = {
+  user: User | null;
 };
 
-// Create the AuthContext
+type AuthAction =
+  | { type: "LOGIN"; payload: User }
+  | { type: "LOGOUT" };
+
+export const authReducer = (state: AuthState, action: AuthAction): AuthState => {
+  switch (action.type) {
+    case "LOGIN":
+      return { user: action.payload };
+    case "LOGOUT":
+      return { user: null };
+    default:
+      return state;
+  }
+};
+
+type AuthContextType = {
+  user: any | null;  // Destructured user from state
+  dispatch: React.Dispatch<AuthAction>;
+};
+
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
 
 export const AuthContextProvider = ({ children }: { children: ReactNode }) => {
-  const [user, setUser] = useState<UserProfile | null>(() => {
-    // Check if user exists in localStorage on initial render
-    const storedUser = localStorage.getItem("user");
-    return storedUser ? JSON.parse(storedUser) : null;
-  });
+  const [state, dispatch] = useReducer(authReducer, { user: null });
 
-  const { data: fetchedUser, isLoading, isError, error } = useQuery<UserProfile>({
-    queryKey: [AUTH],
-    queryFn: getUserProfile,
-    staleTime: Infinity,
-    retry: false,
-    enabled: !user, // Only fetch if user is not in localStorage
-  });
-
-  // Update localStorage and user state when fetchedUser changes
   useEffect(() => {
-    if (fetchedUser) {
-      setUser(fetchedUser);
-      localStorage.setItem("user", JSON.stringify(fetchedUser));
+    const userData = localStorage.getItem("user");
+    if (userData) {
+      const user: User = JSON.parse(userData); // Ensure that the parsed data conforms to the `User` type
+      dispatch({ type: "LOGIN", payload: user });
     }
-  }, [fetchedUser]);
+  }, []);
 
-  // Expose the AuthContext values
   return (
-    <AuthContext.Provider
-      value={{
-        user,
-        isLoading,
-        isError,
-        error,
-        setUser,
-      }}
-    >
+    <AuthContext.Provider value={{ ...state, dispatch }}>
       {children}
     </AuthContext.Provider>
   );
 };
 
-// Custom hook to access AuthContext
 export const useAuthContext = () => {
   const context = useContext(AuthContext);
-
   if (!context) {
     throw new Error("useAuthContext must be used within AuthContextProvider");
   }
-
   return context;
 };

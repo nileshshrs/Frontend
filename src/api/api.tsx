@@ -3,7 +3,7 @@ import API from "./apiClient";
 import { AxiosResponse } from 'axios';
 
 
-export const logout = async () => {
+export const Logout = async () => {
     try {
         const res = API.get('/auth/logout')
         console.log(res)
@@ -13,7 +13,7 @@ export const logout = async () => {
         throw e;
     }
 }
-export const login = async (data: LoginData) => {
+export const login = async (data: LoginData):Promise<any> => {
     try {
         const response = await API.post("/auth/sign-in", data);
         return response; // response.data is already returned from the interceptor
