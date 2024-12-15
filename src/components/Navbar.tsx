@@ -16,7 +16,7 @@ const Navbar = ({ isCollapsed, onNotificationToggle }: toggler) => {
 
     return (
         <nav
-            className={`sm:grid min-h-screen h-full hidden top-0 left-0 place-items-center py-7 border-r border-gray-300 z-10
+            className={`sm:grid min-h-screen h-full hidden top-0 left-0 place-items-center py-7 border-r  z-10
           ${isCollapsed ? "max-w-[70px]" : "max-w-[300px] px-5"} transition-all duration-300 w-full sticky`}
         >
             <ul className="h-full flex flex-col justify-start gap-5 items-center p-0 content-center w-full">

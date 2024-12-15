@@ -1,14 +1,14 @@
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
-import { createMessage, getMessages } from "../api/api";
+import { createMessage, getMessages } from "../../api/api";
 import { useParams } from "react-router-dom";
-import { useAuthContext } from "../context/AuthContext";
-import { useConversationByUser } from "../hooks/useConversation";
+import { useAuthContext } from "../../context/AuthContext";
+import { useConversationByUser } from "../../hooks/useConversation";
 import { useEffect, useRef, useState } from "react";
-import { Button } from "./ui/button";
-import { message } from "../utils/types";
-import useSocket from "../hooks/useSocket";
-import Loader from "./Loader";
-import ErrorComponent from "./ErrorComponent";
+import { Button } from "../ui/button";
+import { message } from "../../utils/types";
+import useSocket from "../../hooks/useSocket";
+import Loader from "../Loader";
+import ErrorComponent from "../ErrorComponent";
 import { FaCircle } from "react-icons/fa";
 import { FaRegCircle } from "react-icons/fa";
 
@@ -29,7 +29,7 @@ const Message = () => {
   useEffect(() => {
     if (!socket) return;
 
-    socket?.emit("adduser", user._id);
+    socket?.emit("adduser", user?._id);
     // const isRecipientOnline = onlineUsers.some(user => user.userID === recipientId);
     // console.log(isRecipientOnline)
 
@@ -137,7 +137,7 @@ const Message = () => {
       {/* Message Container */}
       <div className="flex flex-col p-7 gap-4 flex-1 overflow-y-auto max-h-[calc(90vh-100px)]">
         {!isError ? isLoading ? <Loader /> : messages.map((msg: message) => {
-          const isSender = msg?.sender?._id === user._id;
+          const isSender = msg?.sender?._id === user?._id;
           const senderName = isSender ? msg.sender.username : msg?.recipient?.username;
 
           return (

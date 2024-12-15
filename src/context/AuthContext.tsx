@@ -1,8 +1,5 @@
-import { ReactNode, createContext, useContext, useEffect, useReducer } from "react";
+import { ReactNode, createContext, useContext, useEffect, useReducer, useState } from "react";
 import { User } from "../utils/types";
-
-
-
 
 type AuthState = {
   user: User | null;
@@ -24,25 +21,31 @@ export const authReducer = (state: AuthState, action: AuthAction): AuthState => 
 };
 
 type AuthContextType = {
-  user: any | null;  // Destructured user from state
+  user: User | null; // `user` object from state
   dispatch: React.Dispatch<AuthAction>;
+  loading: boolean; // Indicates whether the user's auth state is still being determined
 };
 
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
 
 export const AuthContextProvider = ({ children }: { children: ReactNode }) => {
   const [state, dispatch] = useReducer(authReducer, { user: null });
+  const [loading, setLoading] = useState<boolean>(true); // Track whether we're still loading user data
 
   useEffect(() => {
-    const userData = localStorage.getItem("user");
-    if (userData) {
-      const user: User = JSON.parse(userData); // Ensure that the parsed data conforms to the `User` type
-      dispatch({ type: "LOGIN", payload: user });
-    }
+    const loadUser = async () => {
+      const userData = localStorage.getItem("user");
+      if (userData) {
+        const user: User = JSON.parse(userData); // Parse user data
+        dispatch({ type: "LOGIN", payload: user }); // Dispatch login action
+      }
+      setLoading(false); // Mark loading as complete
+    };
+    loadUser();
   }, []);
 
   return (
-    <AuthContext.Provider value={{ ...state, dispatch }}>
+    <AuthContext.Provider value={{ ...state, dispatch, loading }}>
       {children}
     </AuthContext.Provider>
   );

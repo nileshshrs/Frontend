@@ -13,20 +13,20 @@ import ResetPassword from "./pages/ResetPassword";
 import Main from "./components/Main";
 import Messages from "./pages/Messages";
 import Sessions from "./pages/Sessions";
-import { setNavigate } from "./utils/navigation";
-import Conversation from "./components/Conversation";
-import Message from "./components/Message";
+import Conversation from "./components/message/Conversation";
+import Message from "./components/message/Message";
 import { useAuthContext } from "./context/AuthContext";
 
 function App() {
-    const navigate = useNavigate(); // React Router's navigate function
-    setNavigate(navigate);
-
     const { theme, toggleTheme } = useTheme();
     const location = useLocation();
-    const { user } = useAuthContext();
+    const { user, loading } = useAuthContext(); // Get `loading` from AuthContext
 
-    // Determine whether to show the login/signup pages or redirect to home if the user is logged in
+    // If loading, render a blank page (nothing).
+    if (loading) {
+        return null; // Render nothing while loading
+    }
+
     const showAuthRoutes = !user;
 
     return (
@@ -45,22 +45,19 @@ function App() {
             <Routes>
                 <Route path="/" element={<Main />}>
                     <Route index element={<Home />} />
-                    {/* Protected routes: Only accessible if the user is logged in */}
                     {user ? (
                         <>
-                            <Route path="/messages/" element={<Messages />} >
+                            <Route path="/messages/" element={<Messages />}>
                                 <Route index element={<Conversation />} />
                                 <Route path=":id" element={<Message />} />
                             </Route>
                             <Route path="/sessions" element={<Sessions />} />
                         </>
                     ) : (
-                        // Redirect unauthenticated users from protected routes to login
                         <Route path="/messages" element={<Navigate to="/sign-in" />} />
                     )}
                 </Route>
 
-                {/* Auth routes: Only accessible if the user is not logged in */}
                 {showAuthRoutes ? (
                     <>
                         <Route path="/sign-in" element={<Login />} />
@@ -69,7 +66,6 @@ function App() {
                         <Route path="/password/reset" element={<ResetPassword />} />
                     </>
                 ) : (
-                    // Redirect logged-in users to home page if they try to access auth pages
                     <>
                         <Route path="/sign-in" element={<Navigate to="/" />} />
                         <Route path="/sign-up" element={<Navigate to="/" />} />
@@ -77,7 +73,7 @@ function App() {
                         <Route path="/password/reset" element={<Navigate to="/" />} />
                     </>
                 )}
-                
+
                 <Route path="/email-verification/:code" element={<VerifyEmail />} />
             </Routes>
         </div>
