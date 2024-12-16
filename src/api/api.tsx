@@ -1,4 +1,4 @@
-import { LoginData, FormData } from "../utils/types";
+import { LoginData, FormData, CreateConversationParams } from "../utils/types";
 import API from "./apiClient";
 import { AxiosResponse } from 'axios';
 
@@ -13,7 +13,7 @@ export const Logout = async () => {
         throw e;
     }
 }
-export const login = async (data: LoginData):Promise<any> => {
+export const login = async (data: LoginData): Promise<any> => {
     try {
         const response = await API.post("/auth/sign-in", data);
         return response; // response.data is already returned from the interceptor
@@ -89,3 +89,22 @@ export const createMessage = async ({ conversationId, recipient, content }: {
         recipient,
         content,
     })
+
+
+export const getConnection = async (): Promise<any> => {
+    try {
+        const res = API.get("/follow/connections")
+        return res;
+    } catch (e) {
+        console.log(e)
+    }
+}
+
+export const createConversation = async (participants: CreateConversationParams): Promise<any> => {
+    try {
+        const res = API.post("/conversation/create", participants)
+        return res
+    } catch (e) {
+        console.log(e)
+    }
+}

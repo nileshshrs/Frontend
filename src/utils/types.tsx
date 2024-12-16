@@ -51,6 +51,18 @@ export type User = {
     verified: boolean;
     image: string;  // Assuming it's a URL or empty string
     __v: number;
-  
-  };
 
+};
+
+
+export type Connections = {
+    _id: string;
+    username: string;
+    email: string;
+    image: string;
+
+}
+
+export interface CreateConversationParams {
+    participants: string[];
+}
