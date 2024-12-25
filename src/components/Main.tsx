@@ -3,6 +3,7 @@ import { useEffect, useState } from "react";
 import Navbar from "./Navbar";
 import NotificationSidebar from "./NotificationSidebar";
 import { useAuthContext } from "../context/AuthContext";
+import SearchSidebar from "./SearchSidebar";
 
 const Main = () => {
 
@@ -10,6 +11,7 @@ const Main = () => {
     const location = useLocation();
     const [isCollapsed, setIsCollapsed] = useState(true); // Default to collapsed
     const [isSecondSidebarVisible, setSecondSidebarVisible] = useState(false);
+    const [isSearchSidebarVisible, setSearchSidebarVisible] = useState(false);
     const [isMobileView, setIsMobileView] = useState(window.innerWidth < 1265);
 
 
@@ -32,9 +34,11 @@ const Main = () => {
         if (location.pathname.startsWith("/messages")) {
             setIsCollapsed(true);
             setSecondSidebarVisible(false);
+            setSearchSidebarVisible(false);
         } else if (!isMobileView) {
             setIsCollapsed(false);
             setSecondSidebarVisible(false);
+            setSearchSidebarVisible(false);
         }
     }, [location.pathname, isMobileView]);
 
@@ -46,6 +50,12 @@ const Main = () => {
 
     const toggleSecondSidebar = () => {
         setSecondSidebarVisible(!isSecondSidebarVisible);
+        setSearchSidebarVisible(false)
+    };
+
+    const toggleSearchSidebar = () => {
+        setSearchSidebarVisible(!isSearchSidebarVisible);
+        setSecondSidebarVisible(false); // Close notifications if search is toggled
     };
 
     return user ? (
@@ -55,10 +65,14 @@ const Main = () => {
                 isCollapsed={isMobileView || isCollapsed} // Always collapsed in mobile view
                 onToggle={toggleNavbar}
                 onNotificationToggle={toggleSecondSidebar}
+                onSearchToggle={toggleSearchSidebar}
+                setCollapsed={setIsCollapsed}
             />
 
             {/* Notification Sidebar */}
             <NotificationSidebar isVisible={isSecondSidebarVisible} />
+
+            <SearchSidebar isVisible={isSearchSidebarVisible} />
 
             {/* Main Content */}
             <div className="w-full">

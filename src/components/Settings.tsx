@@ -20,7 +20,7 @@ const Settings = () => {
     return (
         <DropdownMenu>
             <DropdownMenuTrigger asChild>
-                <Button variant="ghost" className="hover:bg-transparent border-none"><SlMenu /></Button>
+                <button className="hover:bg-transparent border-none "><SlMenu /></button>
             </DropdownMenuTrigger>
             <DropdownMenuContent className="w-[250px] flex flex-col gap-4 py-5">
                 <DropdownMenuCheckboxItem

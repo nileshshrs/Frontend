@@ -36,7 +36,6 @@ const useSocket = (id: string | null) => {
     }, [user]); // Reinitialize only when the user changes
 
     const isRecipientOnline = onlineUsers.some(user => user.userID === id);
-    console.log(isRecipientOnline)
 
     return { socket, isRecipientOnline };
 };

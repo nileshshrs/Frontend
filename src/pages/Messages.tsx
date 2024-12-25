@@ -54,9 +54,12 @@ const Messages = () => {
                                                         : conversation.participants[0].username}
                                                 </div>
                                                 <div className="w-full text-muted-foreground">
-                                                    {conversation.lastMessage.length > 19
-                                                        ? `${conversation.lastMessage.slice(0, 19)}...`
-                                                        : conversation.lastMessage}
+                                                    {conversation.lastMessage.trim() === "" // Check if lastMessage is empty or just spaces
+                                                        ? "Beginning of the conversation" // Placeholder text if no last message
+                                                        : conversation.lastMessage.length > 19 // If lastMessage exists and is not empty, show the first 19 characters
+                                                            ? `${conversation.lastMessage.slice(0, 19)}...`
+                                                            : conversation.lastMessage
+                                                    }
                                                 </div>
                                             </div>
                                             <div className="text-muted-foreground text-[10px]">

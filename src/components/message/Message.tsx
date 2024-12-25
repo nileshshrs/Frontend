@@ -7,10 +7,11 @@ import { useEffect, useRef, useState } from "react";
 import { Button } from "../ui/button";
 import { message } from "../../utils/types";
 import useSocket from "../../hooks/useSocket";
-import Loader from "../Loader";
-import ErrorComponent from "../ErrorComponent";
+import Loader from "../utils/Loader";
+import ErrorComponent from "../utils/ErrorComponent";
 import { FaCircle } from "react-icons/fa";
 import { FaRegCircle } from "react-icons/fa";
+import { IoInformationCircleOutline } from "react-icons/io5";
 
 const Message = () => {
   const { id } = useParams<{ id: string }>();
@@ -115,7 +116,7 @@ const Message = () => {
     <main className="flex flex-col min-h-screen h-full">
       <div>
         <div className="flex justify-between items-center p-7">
-          <div className="flex items-center gap-5">
+          <div className="flex items-center gap-5 justify-between">
             <div>
               <img
                 src="https://play-lh.googleusercontent.com/jInS55DYPnTZq8GpylyLmK2L2cDmUoahVacfN_Js_TsOkBEoizKmAl5-p8iFeLiNjtE=w526-h296-rw"
@@ -130,7 +131,10 @@ const Message = () => {
               <div className="inline-flex items-center gap-1">{isRecipientOnline ? <FaCircle className="text-md" /> : <FaRegCircle className="text-md" />} {isRecipientOnline ? 'online' : 'offline'}</div>
             </div>
           </div>
-          <div>more info</div>
+          <div>
+            <button>
+              <IoInformationCircleOutline className="text-2xl" />
+            </button></div>
         </div>
       </div>
 

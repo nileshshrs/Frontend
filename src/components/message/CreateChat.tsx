@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { useConnections } from "../../hooks/useConnections";
-import Loader from "../Loader";
+import Loader from "../utils/Loader";
 import { Button } from "../ui/button";
 import {
     Dialog,

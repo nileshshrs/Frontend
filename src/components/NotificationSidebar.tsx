@@ -40,8 +40,8 @@ const NotificationSidebar: React.FC<NotificationSidebarProps> = ({ isVisible }) 
                 ${!isMobileView && isMessagesPage ? "fixed top-0 left-[70px]" : ""} 
             `}
         >
-            <h2 className="text-white text-xl">Notifications</h2>
-            <p className="text-white">Here are your notifications...</p>
+            <h2 className="text-xl">Notifications</h2>
+            <p className="">Here are your notifications...</p>
         </div>
     );
 };

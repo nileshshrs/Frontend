@@ -4,16 +4,21 @@ import { IoChatbubbles, IoNotifications, IoPersonSharp } from "react-icons/io5";
 import { toggler } from "../utils/types";
 import Settings from "./Settings";
 
-const Navbar = ({ isCollapsed, onNotificationToggle }: toggler) => {
+const Navbar = ({ isCollapsed, onNotificationToggle, onSearchToggle, setCollapsed }: toggler) => {
 
 
     const location = useLocation();
     const pathname = location.pathname;
 
-    const toggle = () => {
+    const toggleNotification = () => {
         onNotificationToggle(); // Toggle notification menu
-    }
+        setCollapsed((prev: boolean) => !prev); // Correctly toggle collapse state
+    };
 
+    const toggleSearch = () => {
+        onSearchToggle(); // Toggle search menu
+        setCollapsed((prev: boolean) => !prev); // Correctly toggle collapse state
+    };
     return (
         <nav
             className={`sm:grid min-h-screen h-full hidden top-0 left-0 place-items-center py-7 border-r  z-10
@@ -39,7 +44,7 @@ const Navbar = ({ isCollapsed, onNotificationToggle }: toggler) => {
                 {/* Search Button */}
                 <li className="w-full mb-3">
                     <span
-                        onClick={toggle}
+                        onClick={toggleSearch}
                         className={`w-full inline-flex gap-5 items-center ${isCollapsed ? "justify-center" : "justify-start"}`}
                     >
                         <FaSearch className="text-2xl" />
@@ -61,7 +66,7 @@ const Navbar = ({ isCollapsed, onNotificationToggle }: toggler) => {
                 {/* Notifications Button */}
                 <li className="w-full mb-3">
                     <span
-                        onClick={toggle}
+                        onClick={toggleNotification}
                         className={`w-full inline-flex gap-5 items-center ${isCollapsed ? "justify-center" : "justify-start"}`}
                     >
                         <IoNotifications className="text-2xl font-bold" />
@@ -90,8 +95,10 @@ const Navbar = ({ isCollapsed, onNotificationToggle }: toggler) => {
             </ul>
 
             {/* Menu Button */}
-            <div className="flex items-end h-full w-full justify-start">
-                <Settings />
+            <div className="flex items-end h-full w-full lg:justify-start justify-center">
+                <div className="inline-flex items-center justify-center gap-5">
+                    <Settings />{!isCollapsed && <span className="font-semibold text-lg">More</span>}
+                </div>
             </div>
         </nav>
     );
