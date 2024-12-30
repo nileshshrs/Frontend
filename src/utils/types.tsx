@@ -13,9 +13,11 @@ export type toggler = {
     isCollapsed: boolean;
     onToggle: () => void;
     onNotificationToggle: () => void;
-    onSearchToggle: ()=> void;
-    setCollapsed: React.Dispatch<React.SetStateAction<boolean>>
-}
+    onSearchToggle: () => void;
+    setCollapsed: React.Dispatch<React.SetStateAction<boolean>>;
+    onOpenChange: React.Dispatch<React.SetStateAction<boolean>>; // Accept a boolean argument
+};
+
 
 export interface Participant {
     _id: string;

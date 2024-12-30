@@ -4,7 +4,7 @@ import { IoChatbubbles, IoNotifications, IoPersonSharp } from "react-icons/io5";
 import { toggler } from "../utils/types";
 import Settings from "./Settings";
 
-const Navbar = ({ isCollapsed, onNotificationToggle, onSearchToggle, setCollapsed }: toggler) => {
+const Navbar = ({ isCollapsed, onNotificationToggle, onSearchToggle, setCollapsed, onOpenChange }: toggler) => {
 
 
     const location = useLocation();
@@ -19,6 +19,7 @@ const Navbar = ({ isCollapsed, onNotificationToggle, onSearchToggle, setCollapse
         onSearchToggle(); // Toggle search menu
         setCollapsed((prev: boolean) => !prev); // Correctly toggle collapse state
     };
+
     return (
         <nav
             className={`sm:grid min-h-screen h-full hidden top-0 left-0 place-items-center py-7 border-r  z-10
@@ -56,7 +57,10 @@ const Navbar = ({ isCollapsed, onNotificationToggle, onSearchToggle, setCollapse
                 <li className="w-full mb-3">
                     <Link
                         to="/messages"
-                        className={`w-full inline-flex gap-5 items-center ${isCollapsed ? "justify-center" : "justify-start"}`}
+                        className={`
+                            w-full inline-flex gap-5 items-center 
+                            ${isCollapsed ? "justify-center" : "justify-start"}`
+                        }
                     >
                         <IoChatbubbles className="text-2xl font-bold" />
                         {!isCollapsed && <span>Messages</span>}
@@ -67,7 +71,7 @@ const Navbar = ({ isCollapsed, onNotificationToggle, onSearchToggle, setCollapse
                 <li className="w-full mb-3">
                     <span
                         onClick={toggleNotification}
-                        className={`w-full inline-flex gap-5 items-center ${isCollapsed ? "justify-center" : "justify-start"}`}
+                        className={`w-full inline-flex gap-5 items-center cursor-pointer ${isCollapsed ? "justify-center" : "justify-start"}`}
                     >
                         <IoNotifications className="text-2xl font-bold" />
                         {!isCollapsed && <span>Notifications</span>}
@@ -76,7 +80,12 @@ const Navbar = ({ isCollapsed, onNotificationToggle, onSearchToggle, setCollapse
 
                 {/* Plus Icon */}
                 <li className="w-full mb-3">
-                    <div className={`w-full inline-flex gap-5 items-center ${isCollapsed ? "justify-center" : "justify-start"}`}>
+                    <div
+                        onClick={() => onOpenChange(true)}
+                        className={
+                            `w-full inline-flex gap-5 items-center cursor-pointer 
+                            ${isCollapsed ? "justify-center" : "justify-start"}`
+                        }>
                         <FaRegPlusSquare className="text-2xl font-bold" />
                         {!isCollapsed && <span>Create</span>}
                     </div>
@@ -86,7 +95,10 @@ const Navbar = ({ isCollapsed, onNotificationToggle, onSearchToggle, setCollapse
                 <li className="w-full mb-3">
                     <Link
                         to="/profile"
-                        className={`inline-flex w-full gap-5 items-center ${isCollapsed ? "justify-center" : "justify-start"}`}
+                        className={
+                            `inline-flex w-full gap-5 items-center cursor-pointer 
+                            ${isCollapsed ? "justify-center" : "justify-start"}`
+                        }
                     >
                         <IoPersonSharp className="text-2xl font-bold" />
                         {!isCollapsed && <span className={pathname === '/profile' ? 'font-bold' : ''}>Profile</span>}
@@ -95,7 +107,7 @@ const Navbar = ({ isCollapsed, onNotificationToggle, onSearchToggle, setCollapse
             </ul>
 
             {/* Menu Button */}
-            <div className="flex items-end h-full w-full lg:justify-start justify-center">
+            <div className="flex items-end h-full w-full xl:justify-start justify-center">
                 <div className="inline-flex items-center justify-center gap-5">
                     <Settings />{!isCollapsed && <span className="font-semibold text-lg">More</span>}
                 </div>

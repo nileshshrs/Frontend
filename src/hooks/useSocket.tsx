@@ -16,13 +16,13 @@ const useSocket = (id: string | null) => {
 
         // Add the user when the socket connects
         newSocket.on("connect", () => {
-            console.log(`Connected with socket ID: ${newSocket.id}`);
+            // console.log(`Connected with socket ID: ${newSocket.id}`);
             newSocket.emit("adduser", user._id); // Emit adduser only once on connection
         });
 
         // Log all users for debugging
         newSocket.on("getusers", (data) => {
-            console.log("Active users:", data);
+            // console.log("Active users:", data);
             setOnlineUsers(data);
         });
 
@@ -31,7 +31,7 @@ const useSocket = (id: string | null) => {
         // Clean up on unmount or user change
         return () => {
             newSocket.disconnect();
-            console.log("Socket disconnected");
+            // console.log("Socket disconnected");
         };
     }, [user]); // Reinitialize only when the user changes
 

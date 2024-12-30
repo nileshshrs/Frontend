@@ -4,6 +4,7 @@ import Navbar from "./Navbar";
 import NotificationSidebar from "./NotificationSidebar";
 import { useAuthContext } from "../context/AuthContext";
 import SearchSidebar from "./SearchSidebar";
+import CreatePosts from "./posts/createPosts";
 
 const Main = () => {
 
@@ -13,6 +14,7 @@ const Main = () => {
     const [isSecondSidebarVisible, setSecondSidebarVisible] = useState(false);
     const [isSearchSidebarVisible, setSearchSidebarVisible] = useState(false);
     const [isMobileView, setIsMobileView] = useState(window.innerWidth < 1265);
+    const [isCreate, setIsCreate] = useState(false);
 
 
     // Update isMobileView state on window resize
@@ -59,24 +61,26 @@ const Main = () => {
     };
 
     return user ? (
-        <div className={`flex min-h-screen relative ${location.pathname.startsWith("/message")? "gap-0": "gap-5"}`}>
+        <div className={`flex min-h-screen relative ${location.pathname.startsWith("/message") ? "gap-0" : "gap-5"}`}>
             {/* Navbar (Main Sidebar) */}
             <Navbar
-                isCollapsed={isMobileView || isCollapsed} // Always collapsed in mobile view
+                isCollapsed={isMobileView || isCollapsed || isSecondSidebarVisible || isSearchSidebarVisible}// Always collapsed in mobile view
                 onToggle={toggleNavbar}
                 onNotificationToggle={toggleSecondSidebar}
                 onSearchToggle={toggleSearchSidebar}
                 setCollapsed={setIsCollapsed}
+                onOpenChange={setIsCreate}
             />
 
             {/* Notification Sidebar */}
             <NotificationSidebar isVisible={isSecondSidebarVisible} />
-
+            {/*Search Sidebar */}
             <SearchSidebar isVisible={isSearchSidebarVisible} />
 
             {/* Main Content */}
             <div className="w-full">
                 <Outlet />
+                <CreatePosts isOpen={isCreate} onOpenChange={setIsCreate}/>
             </div>
         </div>
     ) : (

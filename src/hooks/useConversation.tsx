@@ -1,6 +1,6 @@
 import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { conversation } from "../utils/types";
-import { getConversation } from "../api/api";
+import { getConversation, getConversationByID } from "../api/api";
 import { useAuthContext } from "../context/AuthContext";
 
 
@@ -20,39 +20,36 @@ export const useConversations = () => {
 };
 
 
-export const useConversationByUser = () => {
+export const useConversationByUser = (conversationId: string) => {
     const { user } = useAuthContext();
-    const queryClient = useQueryClient();
 
-    if (!user) {
-        console.error("User is not authenticated");
-        return { conversation: null, recipientId: null, recipientName: null };
-    }
-
-    // Access the cached conversations
-    const cachedConversations = queryClient.getQueryData<conversation[]>(['conversations']);
-
-    // Find the conversation involving the current user
-    const conversation = cachedConversations?.find(
-        (conv) =>
-            conv.participants &&
-            conv.participants.some((participant) => participant._id === user._id)
+    const { data: conversation, isLoading, error } = useQuery(
+        ["conversation", conversationId],
+        () => getConversationByID(conversationId),
+        {
+            enabled: !!user && !!conversationId, // Only fetch if user and conversationId are available
+            staleTime: 1000 * 60 * 5, // Optional: Cache data for 5 minutes
+            retry: 1, // Retry once if the query fails
+        }
     );
 
-    // Determine the recipient's ID and name
+    console.log(conversation)
+
     const recipientId =
-        conversation?.participants &&
-            conversation?.participants.length === 2 &&
-            user
-            ? user._id === conversation?.participants[0]._id
-                ? conversation?.participants[1]._id
-                : conversation?.participants[0]._id
+        user && conversation?.participants?.length === 2
+            ? user._id === conversation.participants[0]._id
+                ? conversation.participants[1]._id
+                : conversation.participants[0]._id
             : null;
 
-    const recipientName =
-        user._id === conversation?.participants[0]._id
-            ? conversation?.participants[1].username
-            : conversation?.participants[0].username;
+    console.log(recipientId)
 
-    return { conversation, recipientId, recipientName };
+    const recipientName =
+        user && conversation?.participants?.length === 2
+            ? user._id === conversation.participants[0]._id
+                ? conversation.participants[1]?.username || "Unknown"
+                : conversation.participants[0]?.username || "Unknown"
+            : null;
+
+    return { conversation, recipientId, recipientName, isLoading, error };
 };

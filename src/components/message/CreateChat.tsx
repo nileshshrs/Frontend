@@ -13,6 +13,7 @@ import { useMutation } from "@tanstack/react-query";
 import { createConversation } from "../../api/api";
 import { useAuthContext } from "../../context/AuthContext";
 import { useNavigate } from "react-router-dom";
+import { queryClient } from "../../main";
 
 interface CreateChatProps {
     open: boolean;
@@ -41,6 +42,7 @@ export const CreateChat = ({ open, onOpenChange }: CreateChatProps) => {
         mutationFn: createConversation, // Use the imported function
         onSuccess: (data) => {
             const conversationID = data.conversation._id
+            queryClient.invalidateQueries(["conversations"]);
             setSearchTerm("");
             onOpenChange(false);
             navigate(`/messages/${conversationID}`)
@@ -82,14 +84,14 @@ export const CreateChat = ({ open, onOpenChange }: CreateChatProps) => {
                                                 />
                                             </div>
                                             <div>
-                                                <div className="font-bold capitalize text-white">
+                                                <div className="font-bold capitalize">
                                                     {connection.username}
                                                 </div>
                                                 <div className="text-muted-foreground">{connection.email}</div>
                                             </div>
                                         </div>
                                         <Button
-                                            className="font-semibold text-white text-xs"
+                                            className="font-semibold- text-xs"
                                             onClick={() => {
                                                 if (!id) {
                                                     console.log("User ID is undefined. Cannot create conversation.");

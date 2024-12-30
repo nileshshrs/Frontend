@@ -108,3 +108,5 @@ export const createConversation = async (participants: CreateConversationParams)
         console.log(e)
     }
 }
+
+export const getConversationByID = async(id: string):Promise<any>   => API.get(`/conversation/get/${id}`);

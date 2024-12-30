@@ -6,7 +6,6 @@ import { formatTimeAgo } from "../utils/formatTimeAgo";
 import { useState } from "react";
 import { CreateChat } from "../components/message/CreateChat";
 
-
 const Messages = () => {
     const { conversations } = useConversations();
     const { user } = useAuthContext();
@@ -18,24 +17,23 @@ const Messages = () => {
 
     return (
         <div className="flex h-screen">
-            {/* Left Column: Conversations List */}
-            <div className="flex flex-col gap-5 py-2 border-r-2 h-full md:min-w-[350px] min-w-[100px] ">
-                <div className="flex w-full gap-5 md:justify-between items-center py-5 justify-center px-7">
-                    <div className="hidden md:block font-bold text-2xl capitalize">{user?.username}</div>
-                    {/* Button to toggle the CreateChat dialog */}
-                    <button onClick={handleCreateChatToggle}>
-                        <IoIosCreate className="text-3xl" />
-                    </button>
-                </div>
-                <div className="flex-1 overflow-y-auto max-h-screen ">
-                    <div className="flex flex-col h-full ">
-                        {conversations &&
-                            conversations.map((conversation) => (
+            {/* Left Column: Conversations List, only show if there are conversations */}
+            {conversations && conversations.length > 0 && (
+                <div className="flex flex-col gap-5 py-2 border-r-2 h-full md:min-w-[350px] min-w-[100px]">
+                    <div className="flex w-full gap-5 md:justify-between items-center py-5 justify-center px-7">
+                        <div className="hidden md:block font-bold text-2xl capitalize">{user?.username}</div>
+                        {/* Button to toggle the CreateChat dialog */}
+                        <button onClick={handleCreateChatToggle}>
+                            <IoIosCreate className="text-3xl" />
+                        </button>
+                    </div>
+                    <div className="flex-1 overflow-y-auto max-h-screen ">
+                        <div className="flex flex-col h-full ">
+                            {conversations.map((conversation) => (
                                 <Link
                                     to={conversation._id}
                                     key={conversation._id}
-                                    className={`transition min-h-[90px] pl-7 py-5 pr-1 h-[90px] w-full flex items-center md:hover:bg-muted ${conversation.read === false ? `bg-muted` : ``
-                                        }`}
+                                    className={`transition min-h-[90px] pl-7 py-5 pr-1 h-[90px] w-full flex items-center md:hover:bg-muted ${conversation.read === false ? `bg-muted` : ``}`}
                                 >
                                     <div className="flex w-full items-center gap-7 h-full justify-center">
                                         <div>
@@ -54,11 +52,11 @@ const Messages = () => {
                                                         : conversation.participants[0].username}
                                                 </div>
                                                 <div className="w-full text-muted-foreground">
-                                                    {conversation.lastMessage.trim() === "" // Check if lastMessage is empty or just spaces
-                                                        ? "Beginning of the conversation" // Placeholder text if no last message
-                                                        : conversation.lastMessage.length > 19 // If lastMessage exists and is not empty, show the first 19 characters
-                                                            ? `${conversation.lastMessage.slice(0, 19)}...`
-                                                            : conversation.lastMessage
+                                                    {conversation.lastMessage.trim() === ""
+                                                        ? "Beginning of the conversation"
+                                                        : conversation.lastMessage.length > 19
+                                                        ? `${conversation.lastMessage.slice(0, 19)}...`
+                                                        : conversation.lastMessage
                                                     }
                                                 </div>
                                             </div>
@@ -69,9 +67,10 @@ const Messages = () => {
                                     </div>
                                 </Link>
                             ))}
+                        </div>
                     </div>
                 </div>
-            </div>
+            )}
 
             {/* Right Column: Message or Conversation */}
             <main className="w-full">
