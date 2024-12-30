@@ -1,4 +1,4 @@
-import { useQuery, useQueryClient } from "@tanstack/react-query";
+import { useQuery } from "@tanstack/react-query";
 import { conversation } from "../utils/types";
 import { getConversation, getConversationByID } from "../api/api";
 import { useAuthContext } from "../context/AuthContext";

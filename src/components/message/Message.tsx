@@ -162,6 +162,9 @@ const Message = () => {
       <div className="p-5 border-t relative">
         <textarea
           ref={messageInputRef}
+          style={{
+            scrollbarWidth: "none"
+          }}
           className="wrap w-full bg-background h-[40px] focus:outline-none rounded-3xl border resize-none px-5 pr-16 py-2"
         />
         <Button
