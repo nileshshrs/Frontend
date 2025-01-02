@@ -70,3 +70,16 @@ export type Connections = {
 export interface CreateConversationParams {
     participants: string[];
 }
+
+export interface UploadResults {
+    progress: number;
+    error: Error | any; 
+    urls: string [];
+    uploadImages: (files: File[])=> Promise<void>   ;
+
+}
+
+export interface posts {
+    content: string,
+    image: string[]
+}

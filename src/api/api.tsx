@@ -1,4 +1,4 @@
-import { LoginData, FormData, CreateConversationParams } from "../utils/types";
+import { LoginData, FormData, CreateConversationParams, posts } from "../utils/types";
 import API from "./apiClient";
 import { AxiosResponse } from 'axios';
 
@@ -109,4 +109,13 @@ export const createConversation = async (participants: CreateConversationParams)
     }
 }
 
-export const getConversationByID = async(id: string):Promise<any>   => API.get(`/conversation/get/${id}`);
+export const getConversationByID = async (id: string): Promise<any> => API.get(`/conversation/get/${id}`);
+
+export const createPost = async (post: posts) => {
+    try {
+        const res = API.post("/post/create", post);
+        return res
+    } catch (e) {
+        console.log(e);
+    }
+}

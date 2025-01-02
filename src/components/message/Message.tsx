@@ -136,7 +136,7 @@ const Message = () => {
 
           return (
             <div
-              className={`flex ${isSender ? "flex-row-reverse" : ""} items-end`}
+              className={`flex ${isSender ? "flex-row-reverse" : ""} items-end gap-3`}
               key={msg._id}
             >
               <img

@@ -91,7 +91,7 @@ export const CreateChat = ({ open, onOpenChange }: CreateChatProps) => {
                                             </div>
                                         </div>
                                         <Button
-                                            className="font-semibold- text-xs"
+                                            className="font-semibold- text-xs text-white"
                                             onClick={() => {
                                                 if (!id) {
                                                     console.log("User ID is undefined. Cannot create conversation.");

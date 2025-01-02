@@ -12,7 +12,7 @@ const NotificationSidebar: React.FC<NotificationSidebarProps> = ({ isVisible }) 
     const [isMobileView, setIsMobileView] = useState(window.innerWidth < 1265);
 
     // Check if we're on the /messages route
-    const isMessagesPage = pathname === "/messages" ;
+    const isMessagesPage = pathname.startsWith("/messages") ;
 
     // Update isMobileView on window resize
     useEffect(() => {
@@ -30,7 +30,7 @@ const NotificationSidebar: React.FC<NotificationSidebarProps> = ({ isVisible }) 
 
     return (
         <div
-            className={`transition-all duration-300 min-w-[400px] min-h-screen bg-background
+            className={`transition-all duration-300 min-w-[400px] min-h-screen bg-background border-r
                 ${isMobileView
                     ? !isVisible ? "fixed -translate-x-full -z-10" : "fixed top-0 left-[70px]"
                     : !isVisible

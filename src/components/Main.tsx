@@ -4,7 +4,7 @@ import Navbar from "./Navbar";
 import NotificationSidebar from "./NotificationSidebar";
 import { useAuthContext } from "../context/AuthContext";
 import SearchSidebar from "./SearchSidebar";
-import CreatePosts from "./posts/createPosts";
+import CreatePosts from "./posts/CreatePosts";
 
 const Main = () => {
 
