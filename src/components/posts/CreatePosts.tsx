@@ -19,7 +19,6 @@ const CreatePosts = ({ isOpen, onOpenChange }: CreatePostProps) => {
     const [textSize, setTextSize] = useState<'xl' | 'lg' | 'md'>('xl');
     const [showAttachment, setShowAttachment] = useState(false);
     const [files, setFiles] = useState<File[]>([]);
-    const [urls, setUrls] = useState<string[]>([]);
     const [isUploading, setIsUploading] = useState<boolean>(false);
 
     const postMutation = useMutation({
@@ -165,7 +164,6 @@ const CreatePosts = ({ isOpen, onOpenChange }: CreatePostProps) => {
                     throw new Error("Some files failed to upload.");
                 }
     
-                setUrls(uploadedUrls); // Save the URLs for future reference
             } catch (error) {
                 console.error("Error uploading images:", error);
                 setIsUploading(false);
