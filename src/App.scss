@@ -23,6 +23,16 @@
 
     }
 }
+
 .slick-dots li {
-    margin: 0 0 !important; /* Decrease horizontal space between dots */
-  }
+    margin: 0 0 !important;
+}
+
+.slick-dots li button:before {
+    color: black !important;
+}
+
+.dark .slick-dots li button:before {
+    color: white !important;
+    /* Dark mode */
+}

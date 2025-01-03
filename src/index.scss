@@ -3,11 +3,9 @@
 @tailwind components;
 @tailwind utilities;
 
-
-
 @layer base {
   :root {
-    --background: 0 0% 100%;
+    --background: 0 0% 100%;  /* Light mode background */
     --foreground: 0 0% 3.9%;
     --card: 0 0% 100%;
     --card-foreground: 0 0% 3.9%;
@@ -32,11 +30,13 @@
     --chart-4: 43 74% 66%;
     --chart-5: 27 87% 67%;
     --radius: 0.5rem;
-    --custom-border: 0 0% 7%
+    --custom-border: 0 0% 7%;
+    --dot-bg: 0 0% 70%;  /* Default dot color for light mode */
+    --dot-active-bg: black;  /* Active dot color for light mode */
   }
 
   .dark {
-    --background: 0 0% 7%;
+    --background: 0 0% 7%;  /* Dark mode background */
     --foreground: 0 0% 98%;
     --appbar: 0 0% 11%;
     --card: 0 0% 3.9%;
@@ -61,7 +61,9 @@
     --chart-3: 30 80% 55%;
     --chart-4: 280 65% 60%;
     --chart-5: 340 75% 55%;
-    --custom-border: 0 0% 100%
+    --custom-border: 0 0% 100%;
+    --dot-bg: 0 0% 50%;  /* Dot color for dark mode */
+    --dot-active-bg: white;  /* Active dot color for dark mode */
   }
 }
 
@@ -74,4 +76,5 @@
   body {
     @apply bg-background text-foreground;
   }
+
 }

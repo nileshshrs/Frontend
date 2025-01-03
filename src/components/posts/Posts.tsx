@@ -13,7 +13,6 @@ const Posts = () => {
   const { user } = useAuthContext();
   const {
     data,
-    fetchNextPage,
     hasNextPage,
     isFetchingNextPage,
     isLoading,
@@ -29,7 +28,7 @@ const Posts = () => {
   };
 
   return (
-    <div className="w-full max-w-[470px] mx-auto px-4">
+    <div className="w-full max-w-[470px] mx-auto px-4 sm:px-0 sm:mx-0">
       {isLoading && <div className="w-full flex items-center justify-center"><Loader /></div>}
 
       {data?.pages.map((page, index) => (
@@ -37,7 +36,7 @@ const Posts = () => {
           {page.map((post: fetchedPost) => (
             <div
               key={post._id}
-              className={`w-full mb-10 border-b border-gray-300 `}
+              className="w-full mb-10 border-b border-gray-300"
             >
               {/* Wrapper div for each post */}
               <Link to="" className="w-full py-4">
@@ -75,7 +74,7 @@ const Posts = () => {
                   ) : (
                     Array.isArray(post.image) && post.image.map((img: string, index: number) => (
                       <div key={index} className="relative w-full sm:w-[300px] h-[585px] max-h-[585px] rounded-lg overflow-hidden">
-                        <img src={img} alt="" className="w-full h-full object-cover" />
+                        <img src={img} alt="" className="w-full h-full object-contain" />
                       </div>
                     ))
                   )}

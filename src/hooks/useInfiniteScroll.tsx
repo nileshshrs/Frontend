@@ -41,7 +41,6 @@ export const useInfinitePosts = () => {
 
   return {
     data,
-    fetchNextPage,
     hasNextPage,
     isFetchingNextPage,
     isLoading,

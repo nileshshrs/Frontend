@@ -22,8 +22,8 @@ const Navbar = ({ isCollapsed, onNotificationToggle, onSearchToggle, setCollapse
 
     return (
         <nav
-            className={`sm:grid min-h-screen h-full hidden top-0 left-0 place-items-center py-7 border-r  z-10
-          ${isCollapsed ? "max-w-[70px]" : "max-w-[300px] px-5"} transition-all duration-300 w-full sticky`}
+            className={`sm:grid min-h-screen h-full hidden top-0 left-0 place-items-center py-7 border-r z-20 
+            ${isCollapsed ? "max-w-[70px]" : "max-w-[300px] px-5"} transition-all duration-300 w-full sticky top-0`}
         >
             <ul className="h-full flex flex-col justify-start gap-5 items-center p-0 content-center w-full">
                 {/* Logo */}
@@ -58,8 +58,8 @@ const Navbar = ({ isCollapsed, onNotificationToggle, onSearchToggle, setCollapse
                     <Link
                         to="/messages"
                         className={`
-                            w-full inline-flex gap-5 items-center 
-                            ${isCollapsed ? "justify-center" : "justify-start"}`
+                  w-full inline-flex gap-5 items-center 
+                  ${isCollapsed ? "justify-center" : "justify-start"}`
                         }
                     >
                         <IoChatbubbles className="text-2xl font-bold" />
@@ -84,7 +84,7 @@ const Navbar = ({ isCollapsed, onNotificationToggle, onSearchToggle, setCollapse
                         onClick={() => onOpenChange(true)}
                         className={
                             `w-full inline-flex gap-5 items-center cursor-pointer 
-                            ${isCollapsed ? "justify-center" : "justify-start"}`
+                  ${isCollapsed ? "justify-center" : "justify-start"}`
                         }>
                         <FaRegPlusSquare className="text-2xl font-bold" />
                         {!isCollapsed && <span>Create</span>}
@@ -97,7 +97,7 @@ const Navbar = ({ isCollapsed, onNotificationToggle, onSearchToggle, setCollapse
                         to="/profile"
                         className={
                             `inline-flex w-full gap-5 items-center cursor-pointer 
-                            ${isCollapsed ? "justify-center" : "justify-start"}`
+                  ${isCollapsed ? "justify-center" : "justify-start"}`
                         }
                     >
                         <IoPersonSharp className="text-2xl font-bold" />

@@ -1,21 +1,19 @@
 import Posts from "../components/posts/Posts"
 import UserMenu from "../components/UserMenu"
 
-
-
 const Home = () => {
-
   return (
-    <div className={`w - full flex  justify-center`}>
-      <div className="w-full max-w-[700px] p-5 ">
+    <div className={`w-full flex justify-center overflow-x-hidden`}>
+      <div className="w-full max-w-[700px] p-0 lg:p-5"> {/* Padding set to 0 on small screens and 5 on large screens */}
         <Posts />
       </div>
       <UserMenu />
-    </div >
+    </div>
   )
 }
 
 export default Home
+
 {/* <div className="mb-5 border-b-2 border">
 <img src={logoSrc} alt="Logo" className="w-[200px] h-[70px] object-contain" />
 </div>
