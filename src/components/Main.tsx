@@ -6,6 +6,7 @@ import { useAuthContext } from "../context/AuthContext";
 import SearchSidebar from "./SearchSidebar";
 import CreatePosts from "./posts/CreatePosts";
 
+
 const Main = () => {
 
     const { user } = useAuthContext();
@@ -15,7 +16,6 @@ const Main = () => {
     const [isSearchSidebarVisible, setSearchSidebarVisible] = useState(false);
     const [isMobileView, setIsMobileView] = useState(window.innerWidth < 1265);
     const [isCreate, setIsCreate] = useState(false);
-
 
     // Update isMobileView state on window resize
     useEffect(() => {
@@ -80,7 +80,7 @@ const Main = () => {
             {/* Main Content */}
             <div className="w-full">
                 <Outlet />
-                <CreatePosts isOpen={isCreate} onOpenChange={setIsCreate}/>
+                <CreatePosts isOpen={isCreate} onOpenChange={setIsCreate} />
             </div>
         </div>
     ) : (

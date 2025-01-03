@@ -6,6 +6,7 @@ import { uploadImages } from '../../firebase/uploadToFirebase';
 import { useMutation } from '@tanstack/react-query';
 import { posts } from '../../utils/types';
 import { createPost } from '../../api/api';
+import { useInfinitePosts } from '../../hooks/useInfiniteScroll';
 
 interface CreatePostProps {
     isOpen: boolean;
@@ -20,11 +21,12 @@ const CreatePosts = ({ isOpen, onOpenChange }: CreatePostProps) => {
     const [showAttachment, setShowAttachment] = useState(false);
     const [files, setFiles] = useState<File[]>([]);
     const [isUploading, setIsUploading] = useState<boolean>(false);
+    const {refetch} = useInfinitePosts()
 
     const postMutation = useMutation({
         mutationFn: (post: posts) => createPost(post),
-        onSuccess: (data) => {
-            console.log(data);
+        onSuccess: () => {
+            refetch()
             onOpenChange(false);
         },
         onError: (error) => {
@@ -239,7 +241,7 @@ const CreatePosts = ({ isOpen, onOpenChange }: CreatePostProps) => {
                     <Button
                         onClick={createPosts}
                         className="w-full text-white text-lg"
-                        disabled={content === "" && files.length === 0}
+                        disabled={files.length === 0}
                     >
                         Post
                     </Button>

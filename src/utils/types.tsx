@@ -83,3 +83,10 @@ export interface posts {
     content: string,
     image: string[]
 }
+export interface fetchedPost{
+    _id: string,
+    user: User,
+    content: string,
+    image: string,
+    createdAt: string
+}

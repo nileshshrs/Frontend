@@ -19,6 +19,7 @@ TokenRefreshClient.interceptors.response.use(
 // Interceptor for responses
 API.interceptors.response.use(
     (response) => {
+        console.log(response)
         console.log(response.data);
         return response.data; // Return only the response data
     },

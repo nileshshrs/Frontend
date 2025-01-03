@@ -1,3 +1,4 @@
+import Posts from "../components/posts/Posts"
 import UserMenu from "../components/UserMenu"
 
 
@@ -6,8 +7,8 @@ const Home = () => {
 
   return (
     <div className={`w - full flex  justify-center`}>
-      <div className="w-full max-w-[630px]">
-        posts go here
+      <div className="w-full max-w-[700px] p-5 ">
+        <Posts />
       </div>
       <UserMenu />
     </div >

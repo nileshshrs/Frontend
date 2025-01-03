@@ -119,3 +119,5 @@ export const createPost = async (post: posts) => {
         console.log(e);
     }
 }
+
+export const fetchPosts = async (page: number): Promise<any> => API.get(`/post/get?page=${page}&limit=5`);
