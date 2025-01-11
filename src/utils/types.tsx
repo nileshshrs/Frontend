@@ -80,6 +80,7 @@ export interface UploadResults {
 }
 
 export interface posts {
+    _id? : string,
     content: string,
     image: string[]
 }
@@ -89,4 +90,11 @@ export interface fetchedPost{
     content: string,
     image: string,
     createdAt: string
+}
+
+export interface Follows {
+    _id: string,
+    follower: Connections,
+    following: Connections,
+    match: boolean
 }

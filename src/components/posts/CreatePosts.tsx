@@ -7,6 +7,7 @@ import { useMutation } from '@tanstack/react-query';
 import { posts } from '../../utils/types';
 import { createPost } from '../../api/api';
 import { useInfinitePosts } from '../../hooks/useInfiniteScroll';
+import { usePostsByUser } from '../../hooks/usePostsByUser';
 
 interface CreatePostProps {
     isOpen: boolean;
@@ -21,12 +22,14 @@ const CreatePosts = ({ isOpen, onOpenChange }: CreatePostProps) => {
     const [showAttachment, setShowAttachment] = useState(false);
     const [files, setFiles] = useState<File[]>([]);
     const [isUploading, setIsUploading] = useState<boolean>(false);
-    const {refetch} = useInfinitePosts()
+    const { refetch: refetchAllPosts } = useInfinitePosts()
+    const { refetchUserPosts } = usePostsByUser()
 
     const postMutation = useMutation({
         mutationFn: (post: posts) => createPost(post),
         onSuccess: () => {
-            refetch()
+            refetchAllPosts();
+            refetchUserPosts();
             onOpenChange(false);
         },
         onError: (error) => {
@@ -153,40 +156,40 @@ const CreatePosts = ({ isOpen, onOpenChange }: CreatePostProps) => {
 
     const createPosts = async () => {
         let uploadedUrls: string[] = [];
-    
+
         if (files.length > 0) {
             setIsUploading(true);
-    
+
             try {
                 // Upload files and get their URLs
                 uploadedUrls = await uploadImages(files);
-    
+
                 // Ensure all files are uploaded successfully
                 if (uploadedUrls.length !== files.length) {
                     throw new Error("Some files failed to upload.");
                 }
-    
+
             } catch (error) {
                 console.error("Error uploading images:", error);
                 setIsUploading(false);
                 return; // Stop if there's an error
             }
-    
+
             setIsUploading(false);
         }
-    
+
         // Create the new post object with uploaded image URLs
         const newPost: posts = {
             content,
             image: uploadedUrls, // This will be an array with URLs or empty if no images
         };
-    
+
         // Post the content only if uploads are complete and all URLs are ready
         if (!isUploading) {
             postMutation.mutate(newPost);
         }
     };
-    
+
     return (
         <Dialog open={isOpen} onOpenChange={onOpenChange}>
             <DialogContent>

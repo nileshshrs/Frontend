@@ -16,6 +16,8 @@ import Sessions from "./pages/Sessions";
 import Conversation from "./components/message/Conversation";
 import Message from "./components/message/Message";
 import { useAuthContext } from "./context/AuthContext";
+import Account from "./pages/Account";
+import UserProfile from "./pages/UserProfile";
 
 function App() {
     const { theme, toggleTheme } = useTheme();
@@ -52,6 +54,8 @@ function App() {
                                 <Route path=":id" element={<Message />} />
                             </Route>
                             <Route path="/sessions" element={<Sessions />} />
+                            <Route path="/account" element={<Account />} />
+                            <Route path="/profile/:id" element={<UserProfile />} />
                         </>
                     ) : (
                         <Route path="/messages" element={<Navigate to="/sign-in" />} />

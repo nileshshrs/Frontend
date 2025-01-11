@@ -31,8 +31,7 @@
     --chart-5: 27 87% 67%;
     --radius: 0.5rem;
     --custom-border: 0 0% 7%;
-    --dot-bg: 0 0% 70%;  /* Default dot color for light mode */
-    --dot-active-bg: black;  /* Active dot color for light mode */
+
   }
 
   .dark {
@@ -62,8 +61,6 @@
     --chart-4: 280 65% 60%;
     --chart-5: 340 75% 55%;
     --custom-border: 0 0% 100%;
-    --dot-bg: 0 0% 50%;  /* Dot color for dark mode */
-    --dot-active-bg: white;  /* Active dot color for dark mode */
   }
 }
 

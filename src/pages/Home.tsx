@@ -4,7 +4,7 @@ import UserMenu from "../components/UserMenu"
 const Home = () => {
   return (
     <div className={`w-full flex justify-center overflow-x-hidden`}>
-      <div className="w-full max-w-[700px] p-0 lg:p-5"> {/* Padding set to 0 on small screens and 5 on large screens */}
+      <div className="w-full flex items-center justify-center max-w-[700px] p-0 lg:p-5"> {/* Padding set to 0 on small screens and 5 on large screens */}
         <Posts />
       </div>
       <UserMenu />

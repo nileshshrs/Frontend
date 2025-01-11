@@ -30,7 +30,7 @@ const NotificationSidebar: React.FC<NotificationSidebarProps> = ({ isVisible }) 
 
     return (
         <div
-            className={`transition-all duration-300 min-w-[400px] min-h-screen bg-background border-r
+            className={`transition-all duration-300 min-w-[400px] min-h-screen bg-background border-r z-10
                 ${isMobileView
                     ? !isVisible ? "fixed -translate-x-full -z-10" : "fixed top-0 left-[70px]"
                     : !isVisible

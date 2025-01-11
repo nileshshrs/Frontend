@@ -12,15 +12,15 @@ const API = axios.create(options);
 const TokenRefreshClient = axios.create(options);
 TokenRefreshClient.interceptors.response.use(
     (response) => {
-        console.log(response.data);
+        // console.log(response.data);
         return response.data; // Return only the response data
     },
 )
 // Interceptor for responses
 API.interceptors.response.use(
     (response) => {
-        console.log(response)
-        console.log(response.data);
+        // console.log(response)
+        // console.log(response.data);
         return response.data; // Return only the response data
     },
     async (error) => {

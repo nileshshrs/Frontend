@@ -94,7 +94,7 @@ const Navbar = ({ isCollapsed, onNotificationToggle, onSearchToggle, setCollapse
                 {/* User Profile Link */}
                 <li className="w-full mb-3">
                     <Link
-                        to="/profile"
+                        to="/account"
                         className={
                             `inline-flex w-full gap-5 items-center cursor-pointer 
                   ${isCollapsed ? "justify-center" : "justify-start"}`

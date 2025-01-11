@@ -36,7 +36,7 @@ const Posts = () => {
           {page.map((post: fetchedPost) => (
             <div
               key={post._id}
-              className="w-full mb-10 border-b border-gray-300"
+              className="w-full mb-10 border-b-2"
             >
               {/* Wrapper div for each post */}
               <Link to="" className="w-full py-4">
