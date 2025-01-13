@@ -1,6 +1,6 @@
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { Connections } from "../utils/types";
-import { followUser, getConnection, getFollowers, getFollowings } from "../api/api";
+import { followUser, getConnection, getFollowers, getFollowings, unfollowUser } from "../api/api";
 
 
 export const useConnections = () => {
@@ -47,9 +47,16 @@ export const useFollowers = (id: string | undefined) => {
     return { followers, refetchFollowers, isFollowersLoading: isLoading }
 }
 
-export const useFollowUser = () => {
-
-
-  
-
+export const useUnfollowUser = (refetchFollowers: () => void, refetchFollowing: () => void) => {
+    return useMutation({
+        mutationFn: async ({ followerID, followingID }: { followerID: string; followingID: string }) =>
+            unfollowUser(followerID, followingID),
+        onSuccess: () => {
+            refetchFollowers();
+            refetchFollowing();
+        },
+        onError: (error: any) => {
+            console.error("Error unfollowing user:", error);
+        },
+    });
 };

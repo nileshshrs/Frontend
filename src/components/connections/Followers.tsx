@@ -4,26 +4,48 @@ import { Input } from "../ui/input";
 import { Button } from "../ui/button";
 import { useState } from "react";
 import { useMutation } from "@tanstack/react-query";
-import { deleteFollow } from "../../api/api";
+import { deleteFollow, followUser, unfollowUser } from "../../api/api";
 import { useLocation } from "react-router-dom"; // Import useLocation
+import { useAuthContext } from "../../context/AuthContext";
+import { useUnfollowUser } from "../../hooks/useConnections";
 
+
+// todo fix the follow and following button on this dialog box for the user profile page
 interface followersProps {
     open: boolean;
     onOpenChange: (open: boolean) => void;
     followers: Follows[];
     refetchFollowers: () => void;
+    refetchFollowing: () => void;
 }
 
-const Followers = ({ open, onOpenChange, followers, refetchFollowers }: followersProps) => {
+const Followers = ({ open, onOpenChange, followers, refetchFollowing, refetchFollowers }: followersProps) => {
+    const { user } = useAuthContext();
+    const userID = user?._id;
+
+    const { mutate: followMutation } = useMutation({
+        mutationFn: (id: string) => followUser(id!), // Follow user API call
+        onSuccess: () => {
+            // After successfully following, invalidate the user query to refetch the data
+            refetchFollowers();
+            refetchFollowing();
+        },
+        onError: (error: any) => {
+            console.log("Error following user:", error);
+        },
+    });
     const { mutate: removeFollower } = useMutation(deleteFollow, {
         onSuccess: () => {
             // Refetch followers after successful deletion
             refetchFollowers();
+            refetchFollowing();
         },
         onError: (error: any) => {
             console.error("Error deleting follower:", error);
         },
     });
+
+    const { mutate: unfollowMutation } = useUnfollowUser(refetchFollowers, refetchFollowing);
 
     const [searchTerm, setSearchTerm] = useState("");
     const location = useLocation(); // Get the current location
@@ -74,33 +96,55 @@ const Followers = ({ open, onOpenChange, followers, refetchFollowers }: follower
                                                     </div>
                                                 </div>
                                             </div>
-                                            
+
                                             {/* Conditional rendering of the button based on the 'match' attribute */}
-                                            {follow?.match ? (
+                                            {
+                                                isProfilePage ? (
+                                                    follow.follower._id === userID ? null : (
+                                                        follow.match ? (
+                                                            <Button
+                                                                onClick={() =>
+                                                                    unfollowMutation({ followerID: userID!, followingID: follow?.follower?._id })
+                                                                }
+                                                                variant={"ghost"}
+                                                                className="bg-muted"
+                                                            >
+                                                                Following
+                                                            </Button>
+                                                        ) : (
+                                                            <Button
+                                                                onClick={() => followMutation(follow.follower._id)}
+                                                                variant={"ghost"}
+                                                                className="bg-muted"
+
+                                                            >
+                                                                Follow
+                                                            </Button>
+                                                        )
+                                                    )
+
+                                                ) : (null)
+                                            }
+                                            {/* {isProfilePage ? follow?.match ? (
                                                 <Button
-                                                    onClick={() => removeFollower(follow._id)}
+                                                    onClick={() =>
+                                                        unfollowMutation({ followerID: userID! , followingID: follow?.follower?._id })
+                                                    }
                                                     variant={"ghost"}
                                                     className="bg-muted"
                                                 >
                                                     Following
                                                 </Button>
-                                            ) : isProfilePage ? (
+                                            ) : (
                                                 <Button
-                                                    onClick={() => removeFollower(follow._id)}
+                                                    onClick={() => followMutation(follow.follower._id)}
                                                     variant={"ghost"}
                                                     className="bg-muted"
+
                                                 >
                                                     Follow
                                                 </Button>
-                                            ) : (
-                                                <Button
-                                                    onClick={() => removeFollower(follow._id)}
-                                                    variant={"ghost"}
-                                                    className="bg-muted"
-                                                >
-                                                    Remove
-                                                </Button>
-                                            )}
+                                            ) :} */}
                                         </div>
                                     );
                                 })
@@ -113,7 +157,7 @@ const Followers = ({ open, onOpenChange, followers, refetchFollowers }: follower
                     </div>
                 </DialogHeader>
             </DialogContent>
-        </Dialog>
+        </Dialog >
     );
 };
 

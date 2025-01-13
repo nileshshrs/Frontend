@@ -4,7 +4,7 @@ import Following from "../components/connections/Following"
 import { Button } from "../components/ui/button"
 import { useAuthContext } from "../context/AuthContext"
 import { useState } from "react"
-import { useFollowers, useFollowings, useFollowUser } from "../hooks/useConnections"
+import { useFollowers, useFollowings, useUnfollowUser } from "../hooks/useConnections"
 import { GrGrid } from "react-icons/gr"
 import useFetchUserByID from "../hooks/useFetchUserByID"
 import { IoCameraOutline } from "react-icons/io5"
@@ -13,37 +13,26 @@ import { usePostByUserID } from "../hooks/usePostsByUser"
 import Loader from "../components/utils/Loader"
 import { useMutation } from "@tanstack/react-query"
 import { followUser, unfollowUser } from "../api/api"
-import { queryClient } from "../main"
 
 const UserProfile = () => {
     const { user } = useAuthContext();
     const { id } = useParams();
-    const { fetchedUser, isLoading: fetchUserIsLoading , refetch} = useFetchUserByID(id!);
+    const { fetchedUser, isLoading: fetchUserIsLoading, refetch } = useFetchUserByID(id!);
     const { following, refetchFollowing, isFollowingLoading } = useFollowings(id!);
     const { followers, refetchFollowers, isFollowersLoading } = useFollowers(id!);
-    const {mutate: followMutation} = useMutation({
+    const { mutate: followMutation } = useMutation({
         mutationFn: (id: string) => followUser(id!), // Follow user API call
         onSuccess: () => {
             // After successfully following, invalidate the user query to refetch the data
             refetchFollowers();
             refetchFollowing();
-            refetch()
+            refetch();
         },
         onError: (error: any) => {
             console.log("Error following user:", error);
         },
     });
-    const { mutate } = useMutation({
-        mutationFn: async () => unfollowUser(user?._id!, id!),
-        onSuccess: () => {
-            refetchFollowers();
-            refetchFollowing();
-            refetch()
-        },
-        onError: (error: any) => {
-            console.log(error);
-        }
-    })
+    const { mutate: unfollowMutation } = useUnfollowUser(refetchFollowers, refetchFollowing);
     const { userPosts, refetchUserPosts, isLoading } = usePostByUserID(id!)
     const [isFollowersOpen, setIsFollowersOpen] = useState(false); // State to control the dialog
     const [isFollowingOpen, setIsFollowingOpen] = useState(false); // State to control the dialog
@@ -57,6 +46,8 @@ const UserProfile = () => {
         setIsFollowingOpen((prev) => !prev);
     };
 
+    // console.log(followers, "follower")
+    // console.log(following, "follwing")
 
 
     if (fetchUserIsLoading && isFollowersLoading && isFollowingLoading) return null;
@@ -89,13 +80,15 @@ const UserProfile = () => {
                                         isFollower ? <Button
                                             variant={"ghost"}
                                             className="w-[120px] bg-muted text-sm font-semibold"
-                                            onClick={() => mutate()}
+                                            onClick={() =>
+                                                unfollowMutation({ followerID: user?._id!, followingID: id! })
+                                            }
                                         >
                                             unfollow
                                         </Button> : <Button
                                             variant={"ghost"}
                                             className="w-[120px] bg-muted text-sm font-semibold"
-                                            onClick={()=>followMutation(id!)}
+                                            onClick={() => followMutation(id!)}
                                         >
                                             follow
                                         </Button>
@@ -204,11 +197,13 @@ const UserProfile = () => {
                 onOpenChange={setIsFollowersOpen}
                 followers={followers}
                 refetchFollowers={refetchFollowers}
+                refetchFollowing={refetchFollowing}
             />
             <Following
                 open={isFollowingOpen}
                 onOpenChange={setIsFollowingOpen}
                 following={following}
+                refetchFollowers={refetchFollowers}
                 refetchFollowing={refetchFollowing}
             />
         </div>

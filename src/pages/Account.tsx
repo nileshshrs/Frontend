@@ -163,6 +163,7 @@ const Account = () => {
                 open={isFollowersOpen}
                 onOpenChange={setIsFollowersOpen}
                 followers={followers}
+                refetchFollowing={refetchFollowing}
                 refetchFollowers={refetchFollowers}
             />
             <Following
@@ -170,6 +171,7 @@ const Account = () => {
                 onOpenChange={setIsFollowingOpen}
                 following={following}
                 refetchFollowing={refetchFollowing}
+                refetchFollowers={refetchFollowers}
             />
         </div>
     )

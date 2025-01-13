@@ -1,29 +1,49 @@
 import { useMutation } from "@tanstack/react-query";
-import { deleteFollow } from "../../api/api";
+import { deleteFollow, followUser } from "../../api/api";
 import { Follows } from "../../utils/types";
 import { Button } from "../ui/button";
 import { Dialog, DialogContent, DialogTitle, DialogHeader } from "../ui/dialog";
 import { Input } from "../ui/input";
 import { useState } from "react";
 import { useLocation } from "react-router-dom"; // Import useLocation
+import { useAuthContext } from "../../context/AuthContext";
+import { useUnfollowUser } from "../../hooks/useConnections";
 
 interface followingProps {
     open: boolean;
     onOpenChange: (open: boolean) => void;
     following: Follows[];
+    refetchFollowers: () => void;
     refetchFollowing: () => void;
 }
 
-const Following = ({ open, onOpenChange, following, refetchFollowing }: followingProps) => {
+const Following = ({ open, onOpenChange, following, refetchFollowing, refetchFollowers }: followingProps) => {
+    console.log(following)
+    const { user } = useAuthContext();
+    const userID = user?._id;
+
+    const { mutate: followMutation } = useMutation({
+        mutationFn: (id: string) => followUser(id!), // Follow user API call
+        onSuccess: () => {
+            // After successfully following, invalidate the user query to refetch the data
+            refetchFollowers();
+            refetchFollowing();
+        },
+        onError: (error: any) => {
+            console.log("Error following user:", error);
+        },
+    });
     const { mutate: removeFollowing } = useMutation(deleteFollow, {
         onSuccess: () => {
             // Refetch following after successful deletion
             refetchFollowing();
+            refetchFollowers();
         },
         onError: (error: any) => {
             console.error("Error deleting following:", error);
         },
     });
+    const { mutate: unfollowMutation } = useUnfollowUser(refetchFollowers, refetchFollowing);
 
     const [searchTerm, setSearchTerm] = useState("");
     const location = useLocation(); // Get the current location
@@ -76,31 +96,36 @@ const Following = ({ open, onOpenChange, following, refetchFollowing }: followin
                                             </div>
 
                                             {/* Conditional rendering of the button based on the 'match' attribute */}
-                                            {follows?.match ? (
-                                                <Button
-                                                    onClick={() => removeFollowing(follows._id)}
-                                                    variant={"ghost"}
-                                                    className="bg-muted"
-                                                >
-                                                    Following
-                                                </Button>
-                                            ) : isProfilePage ? (
-                                                <Button
-                                                    onClick={() => removeFollowing(follows._id)}
-                                                    variant={"ghost"}
-                                                    className="bg-muted"
-                                                >
-                                                    Follow
-                                                </Button>
-                                            ) : (
-                                                <Button
-                                                    onClick={() => removeFollowing(follows._id)}
-                                                    variant={"ghost"}
-                                                    className="bg-muted"
-                                                >
-                                                    Following
-                                                </Button>
-                                            )}
+                                            {
+                                                isProfilePage ? (
+                                                    follows.following._id === userID ? null : (
+                                                        follows.match ? (
+                                                            <Button
+                                                                onClick={() =>
+                                                                    unfollowMutation({ followerID:follows.following._id!, followingID: userID! })
+                                                                }
+                                                                variant={"ghost"}
+                                                                className="bg-muted"
+                                                            >
+                                                                Following
+                                                            </Button>
+                                                        ) : (
+                                                            <Button
+                                                                onClick={() => followMutation(follows.following._id)}
+                                                                variant={"ghost"}
+                                                                className="bg-muted"
+                                                            >
+                                                                Follow
+                                                            </Button>
+                                                        )
+                                                    )
+                                                ) : (
+                                                    <Button variant={"ghost"} className="bg-muted">
+                                                        Following
+                                                    </Button>
+                                                )
+                                            }
+
                                         </div>
                                     );
                                 })
