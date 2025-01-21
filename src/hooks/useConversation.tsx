@@ -33,7 +33,7 @@ export const useConversationByUser = (conversationId: string) => {
         }
     );
 
-    console.log(conversation)
+    // console.log(conversation)
 
     const recipientId =
         user && conversation?.participants?.length === 2
@@ -42,7 +42,7 @@ export const useConversationByUser = (conversationId: string) => {
                 : conversation.participants[0]._id
             : null;
 
-    console.log(recipientId)
+    // console.log(recipientId)
 
     const recipientName =
         user && conversation?.participants?.length === 2

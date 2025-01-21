@@ -113,7 +113,7 @@ const SearchSidebar = ({ isVisible }: NotificationSidebarProps) => {
                         </div>
                     )
                 ) : (
-                    <div className="text-center text-sm text-muted-foreground">
+                    <div className="text-center text-sm text-muted-foreground min-h-[500px] flex items-center justify-center">
                         No recent searches
                     </div>
                 )}

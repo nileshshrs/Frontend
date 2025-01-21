@@ -1,26 +1,27 @@
-import React from 'react';
 import useSession from '../hooks/useSession';
 import useDeleteSession from '../hooks/useDeleteSession';
-import { Card, CardHeader, CardTitle, CardDescription, CardContent, CardFooter } from '../components/ui/card';
+import { Card, CardHeader, CardDescription, CardContent, CardFooter } from '../components/ui/card';
+import Loader from '../components/utils/Loader';
+import { MdDelete } from "react-icons/md";
 
 const Sessions = () => {
-  const { data: sessions = [], isLoading, isError, error } = useSession();
+  const { data: sessions = [], isLoading} = useSession();
   const { deleteSession, isLoading: isDeleting } = useDeleteSession();
 
   if (isLoading) {
-    return <div>Loading...</div>;
+    return <div><Loader/></div>;
   }
 
-  if (isError) {
-    return <div>Error: {error?.message}</div>;
-  }
 
   return (
     <div className="flex flex-col gap-4 items-center justify-center w-full px-5 py-10">
       <h2 className="text-xl font-bold p-5">Sessions</h2>
       {sessions.length > 0 ? (
         sessions.map((session) => (
-          <Card key={session._id} className="shadow-lg hover:shadow-xl transition-all duration-300 p-5">
+          <Card
+            key={session._id}
+            className="shadow-lg hover:shadow-xl transition-all duration-300 p-5 w-[80%] min-h-[180px]"
+          >
             <CardHeader className="py-1">
               <CardDescription>
                 <strong>Created At:</strong> {new Date(session.createdAt).toLocaleString()}
@@ -33,16 +34,20 @@ const Sessions = () => {
             </CardContent>
             <CardFooter className="py-1 flex justify-between items-center">
               <p>Status: {session.isCurrent ? 'Active' : 'Inactive'}</p>
-              <button
-                onClick={() => deleteSession(session._id)}
-                disabled={isDeleting}
-                className={`bg-red-500 text-white px-3 py-1 rounded-md ${isDeleting
-                    ? 'opacity-50 cursor-not-allowed'
-                    : 'hover:bg-red-600 transition-all duration-200'
-                  }`}
-              >
-                {isDeleting ? 'Deleting...' : 'Delete'}
-              </button>
+              {!session.isCurrent ? (
+                <button
+                  onClick={() => deleteSession(session._id)}
+                  disabled={isDeleting}
+                  className={`bg-red-500 text-white px-3 py-1 rounded-md ${isDeleting
+                      ? 'opacity-50 cursor-not-allowed'
+                      : 'hover:bg-red-600 transition-all duration-200'
+                    }`}
+                >
+                  {isDeleting ? <MdDelete /> : <MdDelete />}
+                </button>
+              ) : (
+                null
+              )}
             </CardFooter>
           </Card>
         ))

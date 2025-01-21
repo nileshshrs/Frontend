@@ -30,7 +30,7 @@ const Account = () => {
     if (isFollowersLoading && isFollowingLoading) return null;
 
     return (
-        <div className='min-h-screen'>
+        <div className='min-h-screen overflow-y-scroll'>
             <div className=" mx-auto py-20 lg:w-[70%] grid gap-5 lg:py-10">
                 <div className='px-5 flex flex-col gap-5'>
                     <div className="flex">
@@ -127,13 +127,13 @@ const Account = () => {
                         </div>
                     </div>
                     {/* you fix this and show this if there are no posts from users*/}
-                    <div className='h-full'>
+                    <div className='h-full flex items-center justify-center'>
                         {isLoading ? <Loader /> : userPosts?.length > 0 ?
-                            <div className="grid grid-cols-3 gap-4">
+                            <div className="grid grid-cols-3 max-w-[900px]">
                                 {
                                     userPosts.map((posts: posts) => {
                                         return (
-                                            <div key={posts._id} className="flex justify-center">
+                                            <div key={posts._id} className="flex justify-center border max-w-[300px] max-h-[300px] items-center">
                                                 <img
                                                     src={posts.image[0]}
                                                     alt=""

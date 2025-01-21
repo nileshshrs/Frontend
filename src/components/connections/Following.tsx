@@ -102,7 +102,7 @@ const Following = ({ open, onOpenChange, following, refetchFollowing, refetchFol
                                                         follows.match ? (
                                                             <Button
                                                                 onClick={() =>
-                                                                    unfollowMutation({ followerID:follows.following._id!, followingID: userID! })
+                                                                    unfollowMutation({ followerID:userID!, followingID:follows.following._id! })
                                                                 }
                                                                 variant={"ghost"}
                                                                 className="bg-muted"
@@ -122,7 +122,7 @@ const Following = ({ open, onOpenChange, following, refetchFollowing, refetchFol
                                                 ) : (
                                                     <Button variant={"ghost"} className="bg-muted">
                                                         Following
-                                                    </Button>
+                                                    </Button> //todo add logic
                                                 )
                                             }
 

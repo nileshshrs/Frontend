@@ -23,7 +23,7 @@ const Navbar = ({ isCollapsed, onNotificationToggle, onSearchToggle, setCollapse
     return (
         <nav
             className={`sm:grid min-h-screen h-full hidden top-0 left-0 place-items-center py-7 border-r z-20 
-            ${isCollapsed ? "max-w-[70px]" : "max-w-[300px] px-5"} transition-all duration-300 w-full sticky top-0`}
+            ${isCollapsed ? "max-w-[70px]" : "max-w-[300px] px-5"} transition-all duration-300 w-full sticky top-0 left-0 bg-background`}
         >
             <ul className="h-full flex flex-col justify-start gap-5 items-center p-0 content-center w-full">
                 {/* Logo */}
@@ -101,17 +101,22 @@ const Navbar = ({ isCollapsed, onNotificationToggle, onSearchToggle, setCollapse
                         }
                     >
                         <IoPersonSharp className="text-2xl font-bold" />
-                        {!isCollapsed && <span className={pathname === '/profile' ? 'font-bold' : ''}>Profile</span>}
+                        {!isCollapsed && <span className={pathname === '/account' ? 'font-bold' : ''}>Profile</span>}
                     </Link>
                 </li>
             </ul>
 
             {/* Menu Button */}
-            <div className="flex items-end h-full w-full xl:justify-start justify-center">
+            <div
+                className={`flex items-end h-full w-full ${isCollapsed ? "justify-center" : "xl:justify-start lg:justify-start justify-center"
+                    }`}
+            >
                 <div className="inline-flex items-center justify-center gap-5">
-                    <Settings />{!isCollapsed && <span className="font-semibold text-lg">More</span>}
+                    <Settings />
+                    {!isCollapsed && <span className="font-semibold text-lg">More</span>}
                 </div>
             </div>
+
         </nav>
     );
 };
