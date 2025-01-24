@@ -156,3 +156,8 @@ export const unfollowUser = async (followerID: string, followingID: string): Pro
     });
 
 export const followUser = async (id: string): Promise<any> => API.post(`follow/${id}`);
+export const updateUserProfile = async (userData: { username?: string, fullname?: string, email?: string, image?: string, bio?: string, }): Promise<any> => {
+    console.log(userData)
+    // Make sure to pass the userData object with the fields you want to update
+    return API.patch('user/update', userData); // Assuming 'user/update' is your PATCH endpoint
+};

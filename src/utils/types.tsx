@@ -47,8 +47,8 @@ export interface message {
 }
 
 export type User = {
-    status: string;
-    isOnlineStatus: boolean;
+    bio: string;
+    fullname?: string;
     _id: string;
     email: string;
     username: string;

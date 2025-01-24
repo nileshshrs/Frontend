@@ -125,26 +125,7 @@ const Followers = ({ open, onOpenChange, followers, refetchFollowing, refetchFol
 
                                                 ) : (null)
                                             }
-                                            {/* {isProfilePage ? follow?.match ? (
-                                                <Button
-                                                    onClick={() =>
-                                                        unfollowMutation({ followerID: userID! , followingID: follow?.follower?._id })
-                                                    }
-                                                    variant={"ghost"}
-                                                    className="bg-muted"
-                                                >
-                                                    Following
-                                                </Button>
-                                            ) : (
-                                                <Button
-                                                    onClick={() => followMutation(follow.follower._id)}
-                                                    variant={"ghost"}
-                                                    className="bg-muted"
 
-                                                >
-                                                    Follow
-                                                </Button>
-                                            ) :} */}
                                         </div>
                                     );
                                 })

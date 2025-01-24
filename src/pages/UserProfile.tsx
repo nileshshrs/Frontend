@@ -125,8 +125,8 @@ const UserProfile = () => {
                             {fetchedUser?.email}
                         </div>
                     </div>
-                    <div className='px-3 text-sm md:px-5 md:text-xs'>
-                        write your bio here
+                    <div className='px-3 text-sm md:px-5 md:text-xs h-[16px]'>
+                        {fetchedUser?.bio}
                     </div>
 
                 </div>
@@ -206,6 +206,7 @@ const UserProfile = () => {
                 refetchFollowers={refetchFollowers}
                 refetchFollowing={refetchFollowing}
             />
+         
         </div>
     )
 }
