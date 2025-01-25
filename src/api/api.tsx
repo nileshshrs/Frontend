@@ -161,3 +161,9 @@ export const updateUserProfile = async (userData: { username?: string, fullname?
     // Make sure to pass the userData object with the fields you want to update
     return API.patch('user/update', userData); // Assuming 'user/update' is your PATCH endpoint
 };
+
+export const updateReadStatus = async (id: string): Promise<any> => {
+   const res = await API.get(`/conversation/update/${id}`)
+   console.log("success");
+   return res
+};

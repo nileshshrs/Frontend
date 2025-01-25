@@ -1,12 +1,12 @@
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
-import { createMessage, getMessages } from "../../api/api";
+import { createMessage, getMessages, updateReadStatus } from "../../api/api";
 import { useParams } from "react-router-dom";
 import { useAuthContext } from "../../context/AuthContext";
 import { useConversationByUser } from "../../hooks/useConversation";
 import { useEffect, useRef, useState } from "react";
 import { Button } from "../ui/button";
 import { message } from "../../utils/types";
-import useSocket from "../../hooks/useSocket";
+import { useSocketContext } from "../../context/SocketContext"; // Using SocketContext
 import Loader from "../utils/Loader";
 import ErrorComponent from "../utils/ErrorComponent";
 import { FaCircle } from "react-icons/fa";
@@ -24,27 +24,28 @@ const Message = () => {
 
   const [messages, setMessages] = useState<message[]>([]);
 
-  const { socket, isRecipientOnline } = useSocket(recipientId);
+  // Use SocketContext here to manage socket connection and online status
+  const { socket, isRecipientOnline } = useSocketContext();
 
   useEffect(() => {
-    if (!socket) return;
-
-    socket.emit("adduser", user?._id);
+    if (!socket || !user?._id) return;
 
     // Listen for incoming messages
     socket.on("get", (data: message) => {
       if (data.conversation === id) {
         setMessages((msg) => [...msg, data]);
+        updateReadStatus(id!)
         queryClient.invalidateQueries(["conversations"]);
       } else {
         queryClient.invalidateQueries(["conversations"]);
       }
     });
 
+    // Cleanup the socket on component unmount
     return () => {
-      socket.disconnect();
+      socket.off("get");
     };
-  }, [socket]);
+  }, [socket, user, id, queryClient, location.pathname]);
 
   const { data: initialMessages, isLoading, isError } = useQuery({
     queryKey: ["message", id],
@@ -60,12 +61,20 @@ const Message = () => {
     },
   });
 
+  useEffect(()=>{
+    if(!id) return;
+    
+    updateReadStatus(id!)
+    queryClient.invalidateQueries(["conversations"]);
+  
+  },[id])
+
   const mutation = useMutation({
     mutationFn: ({ recipient, content }: { recipient: string; content: string }) =>
       createMessage({ conversationId: id!, recipient, content }),
     onSuccess: (newMessageData) => {
       if (socket) {
-        socket.emit("send", newMessageData);
+        socket.emit("send", newMessageData); // Emit the message to the socket
       }
       queryClient.invalidateQueries(["message", id]);
       queryClient.invalidateQueries(["conversations"]);
@@ -118,8 +127,8 @@ const Message = () => {
             <div>
               <h2 className="capitalize font-bold">{recipientName}</h2>
               <div className="inline-flex items-center gap-1">
-                {isRecipientOnline ? <FaCircle className="text-md" /> : <FaRegCircle className="text-md" />}{" "}
-                {isRecipientOnline ? "online" : "offline"}
+                {isRecipientOnline(recipientId) ? <FaCircle className="text-md" /> : <FaRegCircle className="text-md" />}{" "}
+                {isRecipientOnline(recipientId) ? "online" : "offline"}
               </div>
             </div>
           </div>

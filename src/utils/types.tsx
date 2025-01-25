@@ -32,7 +32,8 @@ export interface conversation {
     updatedAt: string;
     lastMessage: string;
     participants: Participant[];
-    read?: boolean;
+    read: string | null;
+    
 }
 export interface message {
     _id: string;

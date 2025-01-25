@@ -8,6 +8,7 @@ import { deleteFollow, followUser, unfollowUser } from "../../api/api";
 import { useLocation } from "react-router-dom"; // Import useLocation
 import { useAuthContext } from "../../context/AuthContext";
 import { useUnfollowUser } from "../../hooks/useConnections";
+import { useSocketContext } from "../../context/SocketContext";
 
 
 // todo fix the follow and following button on this dialog box for the user profile page
@@ -22,13 +23,15 @@ interface followersProps {
 const Followers = ({ open, onOpenChange, followers, refetchFollowing, refetchFollowers }: followersProps) => {
     const { user } = useAuthContext();
     const userID = user?._id;
+    const {socket}  = useSocketContext()
 
     const { mutate: followMutation } = useMutation({
         mutationFn: (id: string) => followUser(id!), // Follow user API call
-        onSuccess: () => {
+        onSuccess: (data) => {
             // After successfully following, invalidate the user query to refetch the data
             refetchFollowers();
             refetchFollowing();
+            socket?.emit("follow", data.follow);
         },
         onError: (error: any) => {
             console.log("Error following user:", error);

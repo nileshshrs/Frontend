@@ -1,11 +1,13 @@
 import React, { useEffect, useState } from "react";
 import { useLocation } from "react-router-dom";
+import { useSocketContext } from "../context/SocketContext";
 
 interface NotificationSidebarProps {
     isVisible: boolean;
 }
 
 const NotificationSidebar: React.FC<NotificationSidebarProps> = ({ isVisible }) => {
+    const {socket}  = useSocketContext();
     const location = useLocation();
     const pathname = location.pathname;
 
@@ -13,6 +15,13 @@ const NotificationSidebar: React.FC<NotificationSidebarProps> = ({ isVisible }) 
 
     // Check if we're on the /messages route
     const isMessagesPage = pathname.startsWith("/messages") ;
+
+    useEffect(()=>{
+        if(!socket) return  ;
+        socket.on("notification", (data:string)=>{
+           console.log(data)
+        })
+    })
 
     // Update isMobileView on window resize
     useEffect(() => {

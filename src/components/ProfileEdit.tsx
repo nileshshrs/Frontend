@@ -30,7 +30,6 @@ const ProfileEdit = ({ open, onOpenChange }: ProfileEditProps) => {
 
     const mutation = useMutation(updateUserProfile, {
         onSuccess: (data) => {
-            console.log('Profile updated:', data.user);
             updateUser(data.user);
             setIsEditingUsername(false);
             setIsEditingFullname(false);
