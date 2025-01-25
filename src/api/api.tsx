@@ -6,7 +6,7 @@ import { AxiosResponse } from 'axios';
 export const Logout = async () => {
     try {
         const res = API.get('/auth/logout')
-        console.log(res)
+        // console.log(res)
         return res; // Ensure you are returning data here
     } catch (e) {
         console.log(e)
@@ -53,7 +53,7 @@ export const verifyEmail = async (verificationCode: string): Promise<any> => {
 export const forgotPassword = async (email: string): Promise<any> => await API.post(`/auth/account-recovery`, email)
 //reset password
 export const resetPassword = async (request: {}): Promise<any> => {
-    console.log(request)
+    // console.log(request)
     await API.post(`/auth/reset-password`, request)
 };
 
@@ -72,7 +72,7 @@ export const getSessions = async (): Promise<any> => API.get("/session/getSessio
 export const deleteSession = async (id: string): Promise<any> => {
     try {
         const res = API.delete(`/session/delete/${id}`)
-        console.log(res)
+        // console.log(res)
         return res
     }
     catch (e: any) {
@@ -163,7 +163,22 @@ export const updateUserProfile = async (userData: { username?: string, fullname?
 };
 
 export const updateReadStatus = async (id: string): Promise<any> => {
-   const res = await API.get(`/conversation/update/${id}`)
-   console.log("success");
-   return res
+    const res = await API.get(`/conversation/update/${id}`)
+    // console.log("success");
+    return res
 };
+
+export const createNotifications = async (data: { recipient: string, type: string, post: string | null }): Promise<any> => {
+    console.log(data);
+    const res = await API.post(`notification/create`, data);
+    // console.log(res);
+    return res
+}
+
+export const getAllNotification = async (): Promise<any> => {
+    const res = await API.get("/notification/all");
+    return res;
+}
+
+export const updateNotifications = async (): Promise<any> => API.get("/notification/update");
+

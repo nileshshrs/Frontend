@@ -5,6 +5,8 @@ import { useAuthContext } from "../context/AuthContext";
 
 
 export const useConversations = () => {
+    const { user } = useAuthContext();
+
     const { data: conversations, refetch, error, isLoading } = useQuery<conversation[]>({
         queryKey: ['conversations'],
         queryFn: getConversation,
@@ -16,7 +18,12 @@ export const useConversations = () => {
         },
     });
 
-    return { conversations, refetch, error, isLoading };
+    // Count unread conversations
+    const messageUnreadCount = conversations
+        ? conversations.filter((conv) => conv.read === user?._id).length
+        : 0;
+
+    return { conversations, refetch, error, isLoading, messageUnreadCount };
 };
 
 
@@ -33,7 +40,6 @@ export const useConversationByUser = (conversationId: string) => {
         }
     );
 
-    // console.log(conversation)
 
     const recipientId =
         user && conversation?.participants?.length === 2
@@ -51,5 +57,12 @@ export const useConversationByUser = (conversationId: string) => {
                 : conversation.participants[0]?.username || "Unknown"
             : null;
 
-    return { conversation, recipientId, recipientName, isLoading, error };
+    const recipientImage =
+        user && conversation?.participants?.length === 2
+            ? user._id === conversation.participants[0]._id
+                ? conversation.participants[1]?.image[0] || null // Assuming the image field exists
+                : conversation.participants[0]?.image[0] || null
+            : null;
+
+    return { conversation, recipientId, recipientName, isLoading, error, recipientImage };
 };

@@ -17,7 +17,7 @@ const Message = () => {
   const { id } = useParams<{ id: string }>();
   const { user } = useAuthContext();
   const queryClient = useQueryClient();
-  const { recipientId, recipientName } = useConversationByUser(id!);
+  const { recipientId, recipientName, recipientImage } = useConversationByUser(id!);
 
   const messagesEndRef = useRef<HTMLDivElement | null>(null);
   const messageInputRef = useRef<HTMLTextAreaElement | null>(null);
@@ -61,13 +61,13 @@ const Message = () => {
     },
   });
 
-  useEffect(()=>{
-    if(!id) return;
-    
+  useEffect(() => {
+    if (!id) return;
+
     updateReadStatus(id!)
     queryClient.invalidateQueries(["conversations"]);
-  
-  },[id])
+
+  }, [id])
 
   const mutation = useMutation({
     mutationFn: ({ recipient, content }: { recipient: string; content: string }) =>
@@ -118,7 +118,7 @@ const Message = () => {
         <div className="flex justify-between items-center p-7">
           <div className="flex items-center gap-5">
             <img
-              src="https://play-lh.googleusercontent.com/jInS55DYPnTZq8GpylyLmK2L2cDmUoahVacfN_Js_TsOkBEoizKmAl5-p8iFeLiNjtE=w526-h296-rw"
+              src={recipientImage || "https://play-lh.googleusercontent.com/jInS55DYPnTZq8GpylyLmK2L2cDmUoahVacfN_Js_TsOkBEoizKmAl5-p8iFeLiNjtE=w526-h296-rw"}
               alt={recipientName ?? "username"}
               className="h-50 w-50 rounded-full"
               width={"50px"}
@@ -142,23 +142,24 @@ const Message = () => {
         {messages.map((msg: message) => {
           const isSender = msg?.sender?._id === user?._id;
           const senderName = isSender ? msg.sender.username : msg?.recipient?.username;
-
+          const senderImage = isSender
+            ? msg.sender?.image?.[0]
+            : recipientImage
           return (
             <div
               className={`flex ${isSender ? "flex-row-reverse" : ""} items-end gap-3`}
               key={msg._id}
             >
               <img
-                src="https://play-lh.googleusercontent.com/jInS55DYPnTZq8GpylyLmK2L2cDmUoahVacfN_Js_TsOkBEoizKmAl5-p8iFeLiNjtE=w526-h296-rw"
+                src={senderImage}
                 alt={senderName}
                 className="h-50 w-50 rounded-full"
                 width={"50px"}
                 height={"50px"}
               />
               <div
-                className={`${
-                  isSender ? "ml-4 bg-primary " : "mr-4 bg-muted"
-                } max-w-[500px] px-5 py-2 text-sm font-semibold rounded-md`}
+                className={`${isSender ? "ml-4 bg-primary " : "mr-4 bg-muted"
+                  } max-w-[500px] px-5 py-2 text-sm font-semibold rounded-md`}
               >
                 {msg.content}
               </div>

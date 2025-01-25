@@ -1,10 +1,13 @@
 import { Navigate, Outlet, useLocation } from "react-router-dom";
 import { useEffect, useState } from "react";
 import Navbar from "./Navbar";
-import NotificationSidebar from "./NotificationSidebar";
+
 import { useAuthContext } from "../context/AuthContext";
 import SearchSidebar from "./SearchSidebar";
 import CreatePosts from "./posts/CreatePosts";
+import NotificationSidebar from "./NotificationSidebar";
+import { updateNotifications } from "../api/api";
+import { queryClient } from "../main";
 
 
 const Main = () => {
@@ -30,6 +33,13 @@ const Main = () => {
             window.removeEventListener("resize", handleResize);
         };
     }, []);
+
+    useEffect(() => {
+        if (isSecondSidebarVisible) {
+           updateNotifications()
+            queryClient.invalidateQueries(['notifications'])
+        }
+    }, [isSecondSidebarVisible]);
 
     // Handle route changes and force collapse for /messages
     useEffect(() => {

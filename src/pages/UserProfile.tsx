@@ -1,4 +1,4 @@
-import { Link, useParams } from "react-router-dom"
+import { useParams } from "react-router-dom"
 import Followers from "../components/connections/Followers"
 import Following from "../components/connections/Following"
 import { Button } from "../components/ui/button"
@@ -12,7 +12,8 @@ import { Follows, posts } from "../utils/types"
 import { usePostByUserID } from "../hooks/usePostsByUser"
 import Loader from "../components/utils/Loader"
 import { useMutation } from "@tanstack/react-query"
-import { followUser, unfollowUser } from "../api/api"
+import { followUser } from "../api/api"
+import useNotificationMutation from "../hooks/useNotifications"
 
 const UserProfile = () => {
     const { user } = useAuthContext();
@@ -20,13 +21,23 @@ const UserProfile = () => {
     const { fetchedUser, isLoading: fetchUserIsLoading, refetch } = useFetchUserByID(id!);
     const { following, refetchFollowing, isFollowingLoading } = useFollowings(id!);
     const { followers, refetchFollowers, isFollowersLoading } = useFollowers(id!);
+    const { mutate: notificationMutation } = useNotificationMutation()
     const { mutate: followMutation } = useMutation({
         mutationFn: (id: string) => followUser(id!), // Follow user API call
-        onSuccess: () => {
+        onSuccess: (data) => {
             // After successfully following, invalidate the user query to refetch the data
+            const recipient: string = data.follow.following; // The user who is being followed
+            const type: 'like' | 'comment' | 'follow' = "follow"; // Notification type is "follow"
+            const post: string | null = null;
+
+            const notification = { recipient, type, post }; // Prepare the notification object
+
+            // Trigger the notification mutation
+            notificationMutation(notification);
             refetchFollowers();
             refetchFollowing();
             refetch();
+
         },
         onError: (error: any) => {
             console.log("Error following user:", error);
@@ -206,7 +217,7 @@ const UserProfile = () => {
                 refetchFollowers={refetchFollowers}
                 refetchFollowing={refetchFollowing}
             />
-         
+
         </div>
     )
 }

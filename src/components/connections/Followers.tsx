@@ -31,7 +31,7 @@ const Followers = ({ open, onOpenChange, followers, refetchFollowing, refetchFol
             // After successfully following, invalidate the user query to refetch the data
             refetchFollowers();
             refetchFollowing();
-            socket?.emit("follow", data.follow);
+            socket?.emit("notify", data.follow);
         },
         onError: (error: any) => {
             console.log("Error following user:", error);

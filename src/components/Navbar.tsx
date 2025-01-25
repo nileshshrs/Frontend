@@ -3,6 +3,8 @@ import { FaRegCompass, FaRegPlusSquare, FaSearch } from "react-icons/fa";
 import { IoChatbubbles, IoNotifications, IoPersonSharp } from "react-icons/io5";
 import { toggler } from "../utils/types";
 import Settings from "./Settings";
+import { useNotifications } from "../hooks/useNotifications";
+import { useConversations } from "../hooks/useConversation";
 
 const Navbar = ({ isCollapsed, onNotificationToggle, onSearchToggle, setCollapsed, onOpenChange }: toggler) => {
 
@@ -19,6 +21,8 @@ const Navbar = ({ isCollapsed, onNotificationToggle, onSearchToggle, setCollapse
         onSearchToggle(); // Toggle search menu
         setCollapsed((prev: boolean) => !prev); // Correctly toggle collapse state
     };
+    const { unreadCount } = useNotifications()
+    const {messageUnreadCount}  = useConversations()
 
     return (
         <nav
@@ -54,7 +58,7 @@ const Navbar = ({ isCollapsed, onNotificationToggle, onSearchToggle, setCollapse
                 </li>
 
                 {/* Messages Link */}
-                <li className="w-full mb-3">
+                <li className="w-full mb-3 inline-flex items-center justify-between relative">
                     <Link
                         to="/messages"
                         className={`
@@ -65,10 +69,20 @@ const Navbar = ({ isCollapsed, onNotificationToggle, onSearchToggle, setCollapse
                         <IoChatbubbles className="text-2xl font-bold" />
                         {!isCollapsed && <span>Messages</span>}
                     </Link>
+                    {messageUnreadCount > 0 && !isCollapsed && (
+                        <span className="ml-2 bg-red-500 text-white text-xs px-2 py-1 rounded-full hidden lg:block">
+                            {unreadCount > 9 ? '9+' : unreadCount}
+                        </span>
+                    )}
+                    {/* Show small unread count as a red circle when collapsed */}
+                    {messageUnreadCount > 0 && isCollapsed && (
+                        <span className="bg-red-500 w-[10px] h-[10px] rounded-full absolute right-5 top-3">
+                        </span>
+                    )}
                 </li>
 
                 {/* Notifications Button */}
-                <li className="w-full mb-3">
+                <li className="w-full mb-3 inline-flex items-center justify-between relative">
                     <span
                         onClick={toggleNotification}
                         className={`w-full inline-flex gap-5 items-center cursor-pointer ${isCollapsed ? "justify-center" : "justify-start"}`}
@@ -76,7 +90,19 @@ const Navbar = ({ isCollapsed, onNotificationToggle, onSearchToggle, setCollapse
                         <IoNotifications className="text-2xl font-bold" />
                         {!isCollapsed && <span>Notifications</span>}
                     </span>
+                    {/* Show unread count if more than 0 */}
+                    {unreadCount > 0 && !isCollapsed && (
+                        <span className="ml-2 bg-red-500 text-white text-xs px-2 py-1 rounded-full hidden lg:block">
+                            {unreadCount > 9 ? '9+' : unreadCount}
+                        </span>
+                    )}
+                    {/* Show small unread count as a red circle when collapsed */}
+                    {unreadCount > 0 && isCollapsed && (
+                        <span className="bg-red-500 w-[10px] h-[10px] rounded-full absolute right-5 top-3">
+                        </span>
+                    )}
                 </li>
+
 
                 {/* Plus Icon */}
                 <li className="w-full mb-3">
