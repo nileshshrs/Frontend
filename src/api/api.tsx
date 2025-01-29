@@ -149,25 +149,27 @@ export const getAllUsers = async (): Promise<any> => API.get("/user/all");
 export const getUserByID = async (id: string): Promise<any> => API.get(`/user/${id}`)
 //this api below is for fetching user posts by user id for user profile page
 export const getPostsByUserID = async (id: string): Promise<any> => API.get(`post/get/user/${id}`)
-
+//unfollow user by particular user
 export const unfollowUser = async (followerID: string, followingID: string): Promise<any> =>
     API.delete('follow/unfollow', {
         data: { followerID, followingID },
     });
-
+//create follow
 export const followUser = async (id: string): Promise<any> => API.post(`follow/${id}`);
+//update user
 export const updateUserProfile = async (userData: { username?: string, fullname?: string, email?: string, image?: string, bio?: string, }): Promise<any> => {
     console.log(userData)
     // Make sure to pass the userData object with the fields you want to update
     return API.patch('user/update', userData); // Assuming 'user/update' is your PATCH endpoint
 };
 
+// conversation read status
 export const updateReadStatus = async (id: string): Promise<any> => {
     const res = await API.get(`/conversation/update/${id}`)
     // console.log("success");
     return res
 };
-
+//notification crud
 export const createNotifications = async (data: { recipient: string, type: string, post: string | null }): Promise<any> => {
     console.log(data);
     const res = await API.post(`notification/create`, data);
@@ -182,3 +184,11 @@ export const getAllNotification = async (): Promise<any> => {
 
 export const updateNotifications = async (): Promise<any> => API.get("/notification/update");
 
+//likes
+
+export const toggleLikes = async (data: { userID: string, postID: string}): Promise<any> => {
+    const res = await API.post("/likes/toggle-likes", data)
+    return res
+}
+
+export const getPostLikes= async(id: string): Promise<any> => API.get(`/likes/likes-by-post/${id}`)

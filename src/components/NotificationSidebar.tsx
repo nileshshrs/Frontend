@@ -31,6 +31,12 @@ const NotificationSidebar: React.FC<NotificationSidebarProps> = ({ isVisible }) 
             }
         })
     })
+    useEffect(() => {
+        if (isVisible) {
+           updateNotifications()
+            queryClient.invalidateQueries(['notifications'])
+        }
+    }, [isVisible]);
 
     // Update isMobileView on window resize
     useEffect(() => {
@@ -47,7 +53,7 @@ const NotificationSidebar: React.FC<NotificationSidebarProps> = ({ isVisible }) 
     }, []);
 
     if (isLoading) {
-        return <div>Loading notifications...</div>;
+        return null;
     }
 
     const getNotificationMessage = (type: string) => {

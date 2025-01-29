@@ -6,11 +6,14 @@ import "slick-carousel/slick/slick-theme.css";
 import { formatTimeAgo } from "../../utils/formatTimeAgo";
 import Loader from "../utils/Loader";
 import { useAuthContext } from "../../context/AuthContext";
-import { FaEllipsisH, FaRegComment, FaRegHeart } from "react-icons/fa"; // Import horizontal ellipsis
+import { FaEllipsisH } from "react-icons/fa";
 import { Link } from "react-router-dom";
+import Likes from "./Likes";
+import { useState } from "react";
 
 const Posts = () => {
   const { user } = useAuthContext();
+  const [likesLoading, setLikesLoading] = useState(false);
   const {
     data,
     hasNextPage,
@@ -25,21 +28,17 @@ const Posts = () => {
     speed: 500,
     slidesToShow: 1,
     slidesToScroll: 1,
-    adaptiveHeight: true, // Make sure it adjusts to the height of the content.
+    adaptiveHeight: true, 
   };
 
   return (
     <div className="w-full max-w-[470px] mx-auto px-4 sm:px-0 sm:mx-0">
-      {isLoading && <div className="w-full flex items-center justify-center"><Loader /></div>}
+      {(isLoading || likesLoading) && <div className="w-full flex items-center justify-center"><Loader /></div>}
 
       {data?.pages.map((page, index) => (
         <div key={index} className="w-full">
           {page.map((post: fetchedPost) => (
-            <div
-              key={post._id}
-              className="w-full mb-10 border-b-2"
-            >
-              {/* Wrapper div for each post */}
+            <div key={post._id} className="w-full mb-10 border-b-2">
               <Link to="" className="w-full py-4">
                 <div className="flex items-center justify-between w-full h-full">
                   <div className="flex gap-5 mb-5 h-full">
@@ -57,16 +56,13 @@ const Posts = () => {
                     </div>
                   </div>
 
-                  {/* Ellipsis only shows if post user is the same as current user */}
                   {post.user._id === user?._id && (
-                    <div className="h-full flex items-center justify-end ml-auto mb-5"> {/* Flexbox for vertical centering */}
-                      <FaEllipsisH className="cursor-pointer" /> {/* Horizontal dots */}
+                    <div className="h-full flex items-center justify-end ml-auto mb-5">
+                      <FaEllipsisH className="cursor-pointer" />
                     </div>
                   )}
-
                 </div>
 
-                {/* Slider with fixed portrait div container */}
                 <Slider {...settings} className="w-full border bg-transparent rounded-lg">
                   {Array.isArray(post.image) && post.image.length === 1 ? (
                     <div className="relative w-full sm:w-[300px] h-[585px] sm:h-[585px] rounded-lg overflow-hidden">
@@ -82,24 +78,14 @@ const Posts = () => {
                 </Slider>
               </Link>
               <div className="flex flex-col gap-1 mt-6 mb-2">
-                <div className=" flex gap-5">
-                  <button className="flex items-center">
-                    <FaRegHeart className="text-2xl" />
-                  </button>
-                  <button className="flex items-center">
-                    <FaRegComment className="text-2xl" />
-                  </button>
-                </div>
-                <div className="font-bold">
-                  60475 Likes
-                </div>
-                {
-                  post.content !== "" && (
-                    <p className="">
-                      <span className="font-bold  capitalize"><Link to="">{post.user.username}</Link></span> {post.content}
-                    </p>
-                  )
-                }
+                <Likes postID={post._id} setLikesLoading={setLikesLoading} />
+                {post.content !== "" && (
+                  <p>
+                    <span className="font-bold capitalize">
+                      <Link to="">{post.user.username}</Link>
+                    </span> {post.content}
+                  </p>
+                )}
               </div>
             </div>
           ))}

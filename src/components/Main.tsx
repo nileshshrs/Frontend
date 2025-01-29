@@ -34,12 +34,7 @@ const Main = () => {
         };
     }, []);
 
-    useEffect(() => {
-        if (isSecondSidebarVisible) {
-           updateNotifications()
-            queryClient.invalidateQueries(['notifications'])
-        }
-    }, [isSecondSidebarVisible]);
+
 
     // Handle route changes and force collapse for /messages
     useEffect(() => {
