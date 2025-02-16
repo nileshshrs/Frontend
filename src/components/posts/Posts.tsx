@@ -16,7 +16,6 @@ const Posts = () => {
   const { user } = useAuthContext();
   const [likesLoading, setLikesLoading] = useState(false);
   const [openSinglePosts, setOpenSinglePosts] = useState(false);
-  const [selectedPostID, setSelectedPostID] = useState(null);
 
   const {
     data,

@@ -1,5 +1,4 @@
 import { useAuthContext } from '../context/AuthContext'
-import { Link } from 'react-router-dom';
 import { Button } from '../components/ui/button';
 import { GrGrid } from "react-icons/gr";
 import { IoCameraOutline } from "react-icons/io5";
@@ -11,7 +10,6 @@ import { useState } from 'react';
 import Followers from '../components/connections/Followers';
 import Following from '../components/connections/Following';
 import ProfileEdit from '../components/ProfileEdit';
-import Singledatas from '../components/posts/SinglePosts';
 import SinglePosts from '../components/posts/SinglePosts';
 
 const Account = () => {
