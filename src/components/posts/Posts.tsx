@@ -10,10 +10,14 @@ import { FaEllipsisH } from "react-icons/fa";
 import { Link } from "react-router-dom";
 import Likes from "./Likes";
 import { useState } from "react";
+import SinglePosts from "./SinglePosts";
 
 const Posts = () => {
   const { user } = useAuthContext();
   const [likesLoading, setLikesLoading] = useState(false);
+  const [openSinglePosts, setOpenSinglePosts] = useState(false);
+  const [selectedPostID, setSelectedPostID] = useState(null);
+
   const {
     data,
     hasNextPage,
@@ -28,12 +32,18 @@ const Posts = () => {
     speed: 500,
     slidesToShow: 1,
     slidesToScroll: 1,
-    adaptiveHeight: true, 
+    adaptiveHeight: true,
   };
+
+
 
   return (
     <div className="w-full max-w-[470px] mx-auto px-4 sm:px-0 sm:mx-0">
-      {(isLoading || likesLoading) && <div className="w-full flex items-center justify-center"><Loader /></div>}
+      {(isLoading || likesLoading) && (
+        <div className="w-full flex items-center justify-center">
+          <Loader />
+        </div>
+      )}
 
       {data?.pages.map((page, index) => (
         <div key={index} className="w-full">
@@ -66,7 +76,7 @@ const Posts = () => {
                 <Slider {...settings} className="w-full border bg-transparent rounded-lg">
                   {Array.isArray(post.image) && post.image.length === 1 ? (
                     <div className="relative w-full sm:w-[300px] h-[585px] sm:h-[585px] rounded-lg overflow-hidden">
-                      <img src={post.image[0]} alt="" className="w-full h-full object-cover" />
+                      <img src={post.image[0]} alt="" className="w-full h-full object-contain" />
                     </div>
                   ) : (
                     Array.isArray(post.image) && post.image.map((img: string, index: number) => (
@@ -78,7 +88,7 @@ const Posts = () => {
                 </Slider>
               </Link>
               <div className="flex flex-col gap-1 mt-6 mb-2">
-                <Likes postID={post._id} setLikesLoading={setLikesLoading} />
+                <Likes postID={post._id} setLikesLoading={setLikesLoading} isOpen={openSinglePosts} setIsOpen={setOpenSinglePosts} />
                 {post.content !== "" && (
                   <p>
                     <span className="font-bold capitalize">
@@ -87,13 +97,20 @@ const Posts = () => {
                   </p>
                 )}
               </div>
+              <SinglePosts id={post._id} isOpen={openSinglePosts} setIsOpen={setOpenSinglePosts} />
             </div>
           ))}
         </div>
       ))}
-      {isFetchingNextPage && <div className="w-full flex items-center justify-center"><Loader /></div>}
+
+      {isFetchingNextPage && (
+        <div className="w-full flex items-center justify-center">
+          <Loader />
+        </div>
+      )}
 
       {!hasNextPage && <div>No more posts</div>}
+
     </div>
   );
 };

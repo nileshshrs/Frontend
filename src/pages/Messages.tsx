@@ -15,6 +15,7 @@ const Messages = () => {
         setIsCreateChatOpen((prev) => !prev);
     };
 
+    console.log(conversations);
     return (
         <div className="flex h-screen">
             {/* Left Column: Conversations List, only show if there are conversations */}

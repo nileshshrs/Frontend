@@ -5,9 +5,11 @@ import { toggler } from "../utils/types";
 import Settings from "./Settings";
 import { useNotifications } from "../hooks/useNotifications";
 import { useConversations } from "../hooks/useConversation";
+import { useTheme } from "../context/ThemeContext";
 
 const Navbar = ({ isCollapsed, onNotificationToggle, onSearchToggle, setCollapsed, onOpenChange }: toggler) => {
 
+    const { theme } = useTheme();
 
     const location = useLocation();
     const pathname = location.pathname;
@@ -24,6 +26,11 @@ const Navbar = ({ isCollapsed, onNotificationToggle, onSearchToggle, setCollapse
     const { unreadCount } = useNotifications()
     const {messageUnreadCount}  = useConversations()
 
+    const logoSrc = theme === 'light' ? '/image/nav-light.png' : '/image/nav-dark.png';
+    const shutter = theme === 'light' ? '/image/shutter-dark.png' : '/image/shutter-light.png';
+    
+
+
     return (
         <nav
             className={`sm:grid min-h-screen h-full hidden top-0 left-0 place-items-center py-7 border-r z-20 
@@ -31,8 +38,8 @@ const Navbar = ({ isCollapsed, onNotificationToggle, onSearchToggle, setCollapse
         >
             <ul className="h-full flex flex-col justify-start gap-5 items-center p-0 content-center w-full">
                 {/* Logo */}
-                <li className="mb-5">
-                    {isCollapsed ? null : <span>LOGO</span>}
+                <li className={isCollapsed? "mb-5": "mb-5 w-full"}>
+                    {isCollapsed ? <img src={shutter} className="w-[40px] "/> : <img src={logoSrc} />}
                 </li>
 
                 {/* Home Link */}

@@ -99,3 +99,16 @@ export interface Follows {
     following: Connections,
     match: boolean
 }
+
+export interface Comments {
+    _id: string;
+    post: string;
+    comment: string;
+    createdAt: string;
+    updatedAt: string;
+    user: {
+        _id: string;
+        username: string;
+        image: string[]; // Assuming image is an array
+    };
+}

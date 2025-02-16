@@ -192,3 +192,19 @@ export const toggleLikes = async (data: { userID: string, postID: string}): Prom
 }
 
 export const getPostLikes= async(id: string): Promise<any> => API.get(`/likes/likes-by-post/${id}`)
+
+export const getPostsByID = async (id: string): Promise<any> => {
+    console.log(id);
+    try {
+        const res = await API.get(`/post/get/${id}`);
+        return res;  // Ensure only the data is returned
+    } catch (error) {
+        console.error("Error fetching post:", error);
+    }
+};
+
+export const createComments = async(data:{post: string, comment:string}): Promise<any>=> API.post("/comment/create", data);
+
+export const getComments = async(id: string):Promise<any> => API.get(`/comment/get/${id}`);
+
+export const deleteComments = async(id:string): Promise<any>    => API.delete(`/comment/delete/${id}`);

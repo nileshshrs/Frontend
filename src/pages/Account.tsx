@@ -11,6 +11,8 @@ import { useState } from 'react';
 import Followers from '../components/connections/Followers';
 import Following from '../components/connections/Following';
 import ProfileEdit from '../components/ProfileEdit';
+import Singledatas from '../components/posts/SinglePosts';
+import SinglePosts from '../components/posts/SinglePosts';
 
 const Account = () => {
 
@@ -21,6 +23,7 @@ const Account = () => {
     const [isFollowersOpen, setIsFollowersOpen] = useState(false); // State to control the dialog
     const [isFollowingOpen, setIsFollowingOpen] = useState(false); // State to control the dialog
     const [isEditProfileOpen, setIsEditProfileOpen] = useState(false);
+    const [openSinglePosts, setOpenSinglePosts] = useState(false);
 
     const handleFollowersToggle = () => {
         setIsFollowersOpen((prev) => !prev);
@@ -100,7 +103,7 @@ const Account = () => {
                             </div>
                         </div>
                         <div className='px-3 text-sm md:px-5 md:text-xs h-[16px]'>
-                           {user?.bio}
+                            {user?.bio}
                         </div>
 
                     </div>
@@ -140,16 +143,18 @@ const Account = () => {
                                     {
                                         userPosts.map((posts: posts) => {
                                             return (
-                                                <div key={posts._id} className="flex justify-center border max-w-[300px] max-h-[300px] items-center">
+                                                <div key={posts._id} className="flex justify-center border max-w-[300px] max-h-[300px] items-center" onClick={()=>setOpenSinglePosts(!openSinglePosts)}>
                                                     <img
                                                         src={posts.image[0]}
                                                         alt=""
                                                         className="w-full h-full max-w-[300px] max-h-[300px] object-cover aspect-square"
                                                     />
+                                                    <SinglePosts id={posts._id!} isOpen={openSinglePosts} setIsOpen={setOpenSinglePosts} />
                                                 </div>
                                             )
                                         })
                                     }
+
                                 </div> :
                                 <div className='flex flex-col items-center justify-center gap-1 p-5 h-full'>
                                     <div className='rounded-full border-2 border-custom-border p-7'>
@@ -182,7 +187,7 @@ const Account = () => {
                 refetchFollowing={refetchFollowing}
                 refetchFollowers={refetchFollowers}
             />
-            <ProfileEdit open={isEditProfileOpen} onOpenChange={setIsEditProfileOpen}/>
+            <ProfileEdit open={isEditProfileOpen} onOpenChange={setIsEditProfileOpen} />
         </>
 
     )
