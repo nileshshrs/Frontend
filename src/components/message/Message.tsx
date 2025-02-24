@@ -39,6 +39,7 @@ const Message = () => {
       } else {
         queryClient.invalidateQueries(["conversations"]);
       }
+      queryClient.invalidateQueries(["conversations"]);
     });
 
     // Cleanup the socket on component unmount

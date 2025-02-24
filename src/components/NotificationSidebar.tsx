@@ -25,17 +25,12 @@ const NotificationSidebar: React.FC<NotificationSidebarProps> = ({ isVisible }) 
         if (!socket) return;
         socket.on("notification", (data: string) => {
             queryClient.invalidateQueries(['notifications'])
-            if (isVisible === true) {
-                updateNotifications()
-                queryClient.invalidateQueries(['notifications'])
-            }
+
         })
     })
     useEffect(() => {
-        if (isVisible) {
-           updateNotifications()
-            queryClient.invalidateQueries(['notifications'])
-        }
+        updateNotifications()
+        queryClient.invalidateQueries(['notifications'])
     }, [isVisible]);
 
     // Update isMobileView on window resize

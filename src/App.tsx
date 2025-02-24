@@ -18,6 +18,7 @@ import Message from "./components/message/Message";
 import { useAuthContext } from "./context/AuthContext";
 import Account from "./pages/Account";
 import UserProfile from "./pages/UserProfile";
+import Dashboard from "./components/dashboard/Dashboard";
 
 function App() {
     const { theme, toggleTheme } = useTheme();
@@ -45,10 +46,13 @@ function App() {
             )}
 
             <Routes>
+
                 <Route path="/" element={<Main />}>
                     <Route index element={<Home />} />
+                    <Route path="/dashboard" element={<Dashboard />} />
                     {user ? (
                         <>
+
                             <Route path="/messages/" element={<Messages />}>
                                 <Route index element={<Conversation />} />
                                 <Route path=":id" element={<Message />} />

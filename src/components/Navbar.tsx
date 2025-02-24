@@ -78,7 +78,7 @@ const Navbar = ({ isCollapsed, onNotificationToggle, onSearchToggle, setCollapse
                     </Link>
                     {messageUnreadCount > 0 && !isCollapsed && (
                         <span className="ml-2 bg-red-500 text-white text-xs px-2 py-1 rounded-full hidden lg:block">
-                            {unreadCount > 9 ? '9+' : unreadCount}
+                            {messageUnreadCount > 9 ? '9+' : messageUnreadCount}
                         </span>
                     )}
                     {/* Show small unread count as a red circle when collapsed */}

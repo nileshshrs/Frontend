@@ -84,7 +84,7 @@ const ProfileEdit = ({ open, onOpenChange }: ProfileEditProps) => {
                 </DialogHeader>
                 <div>
                     <div className='px-5 flex items-center justify-between py-5 bg-muted rounded-lg my-5'>
-                        <div className='flex gap-5'>
+                        <div className='inline-flex items-center gap-5'>
                             <img
                                 src={image}
                                 alt='Profile'
@@ -94,7 +94,9 @@ const ProfileEdit = ({ open, onOpenChange }: ProfileEditProps) => {
                                 <div className='font-bold capitalize'>
                                     {user?.username}
                                 </div>
-                                <div>{user?.fullname}</div>
+                                {
+                                    user?.fullname !== "" || user.fullname !== null ? <div>{user?.fullname}</div> : null
+                                }
                             </div>
                         </div>
                         <Button value={'primary'} onClick={handleFileInputClick}>
