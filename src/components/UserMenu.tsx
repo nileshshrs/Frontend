@@ -19,7 +19,7 @@ const UserMenu = () => {
                     <div>
                         {/* User avatar */}
                         <img
-                            src="https://play-lh.googleusercontent.com/jInS55DYPnTZq8GpylyLmK2L2cDmUoahVacfN_Js_TsOkBEoizKmAl5-p8iFeLiNjtE=w526-h296-rw"
+                            src={user.image[0] ||`https://play-lh.googleusercontent.com/jInS55DYPnTZq8GpylyLmK2L2cDmUoahVacfN_Js_TsOkBEoizKmAl5-p8iFeLiNjtE=w526-h296-rw`}
                             alt={user?.username}
                             width="50px"
                             height="50px"

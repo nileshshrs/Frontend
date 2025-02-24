@@ -74,7 +74,7 @@ const Comment = ({ postID }: CommentProps) => {
             {/* Comment Input */}
             <div className="flex px-3 gap-1 py-1">
                 <textarea
-                    className="w-full border border-gray-300 rounded-md resize-none focus:outline-none px-5 py-2 h-10"
+                    className="w-full border border-gray-300 rounded-md resize-none focus:outline-none px-5 py-2 h-10 bg-background"
                     placeholder="Add a comment..."
                     value={comment}
                     onChange={(e) => setComment(e.target.value)}

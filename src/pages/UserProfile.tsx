@@ -14,10 +14,13 @@ import Loader from "../components/utils/Loader"
 import { useMutation } from "@tanstack/react-query"
 import { followUser } from "../api/api"
 import useNotificationMutation from "../hooks/useNotifications"
+import SinglePosts from "../components/posts/SinglePosts"
 
 const UserProfile = () => {
     const { user } = useAuthContext();
     const { id } = useParams();
+    const [openSinglePosts, setOpenSinglePosts] = useState(false);
+
     const { fetchedUser, isLoading: fetchUserIsLoading, refetch } = useFetchUserByID(id!);
     const { following, refetchFollowing, isFollowingLoading } = useFollowings(id!);
     const { followers, refetchFollowers, isFollowersLoading } = useFollowers(id!);
@@ -72,7 +75,7 @@ const UserProfile = () => {
                         <section className="mr-5">
                             <div>
                                 <img
-                                    src="https://avatars.pfptown.com/020/anime-girl-pfp-995.png"
+                                    src={fetchedUser?.image[0]}
                                     alt=""
                                     className="w-[75px] h-[75px] rounded-full md:w-[150px] md:h-[150px]"
                                 />
@@ -85,7 +88,7 @@ const UserProfile = () => {
                                 {/* Username and Edit Button */}
                                 <div className="flex gap-5 items-center">
                                     <div className="text-xl hidden font-semibold md:block">
-                                        {fetchedUser?.username}
+                                        {fetchedUser?.fullname||fetchedUser?.username}
                                     </div>
                                     {
                                         isFollower ? <Button
@@ -173,16 +176,17 @@ const UserProfile = () => {
                     {/* you fix this and show this if there are no posts from users*/}
                     <div className='h-full'>
                         {isLoading ? <Loader /> : userPosts?.length > 0 ?
-                            <div className="grid grid-cols-3 gap-4">
+                            <div className="grid grid-cols-3 gap-1">
                                 {
                                     userPosts.map((posts: posts) => {
                                         return (
-                                            <div key={posts._id} className="flex justify-center">
+                                            <div key={posts._id} className="flex justify-center" onClick={() => setOpenSinglePosts(!openSinglePosts)}>
                                                 <img
                                                     src={posts.image[0]}
                                                     alt=""
-                                                    className="w-full h-full max-w-[300px] max-h-[300px] object-cover aspect-square"
+                                                    className="w-full h-full  object-cover aspect-square"
                                                 />
+                                                <SinglePosts id={posts._id!} isOpen={openSinglePosts} setIsOpen={setOpenSinglePosts} />
                                             </div>
                                         )
                                     })

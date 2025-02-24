@@ -58,7 +58,7 @@ const Account = () => {
                                     {/* Username and Edit Button */}
                                     <div className="flex gap-5 items-center">
                                         <div className="text-xl hidden font-semibold md:block">
-                                            {user?.username}
+                                            {user?.fullname ||user?.username}
                                         </div>
 
                                         <Button
@@ -94,7 +94,7 @@ const Account = () => {
                         </div>
                         <div className='flex flex-col gap-2 md:hidden'>
                             <div className="px-3 text-lg font-semibold">
-                                {user?.username}
+                            {user?.username}
                             </div>
                             <div className="text-xs bg-muted px-3 py-1 rounded-full w-fit">
                                 {user?.email}
@@ -135,7 +135,7 @@ const Account = () => {
                             </div>
                         </div>
                         {/* you fix this and show this if there are no posts from users*/}
-                        <div className='h-full flex items-center justify-center'>
+                        <div className='h-full flex items-center'>
                             {isLoading ? <Loader /> : userPosts?.length > 0 ?
                                 <div className="grid grid-cols-3 max-w-[900px]">
                                     {

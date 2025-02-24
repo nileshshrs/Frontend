@@ -73,7 +73,7 @@ const SinglePosts = ({ id, isOpen, setIsOpen }: dataProps) => {
                         </div>
                         <div>
                             <DialogHeader>
-                                <DialogTitle className="text-start">
+                                <DialogTitle className="text-start py-3">
                                     <span className="text-sm text-start capitalize ">
                                         {isLoading ? "Loading..." : data?.user?.username || "Unknown User"}
                                     </span>
@@ -82,7 +82,7 @@ const SinglePosts = ({ id, isOpen, setIsOpen }: dataProps) => {
 
                             {/* Moved DialogDescription Outside of DialogTitle */}
                             {data?.content && (
-                                <DialogDescription className="text-sm md:text-base text-gray-600">
+                                <DialogDescription className="text-sm md:text-base">
                                     <span className="flex items-center gap-3 text-sm font-normal">
                                         {data.content}
                                     </span>
