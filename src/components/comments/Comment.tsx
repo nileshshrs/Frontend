@@ -4,6 +4,7 @@ import { useState } from "react";
 import { useAuthContext } from "../../context/AuthContext";
 import { Comments } from "../../utils/types";
 import { MdDelete } from "react-icons/md";
+import { Link } from "react-router-dom";
 
 interface CommentProps {
     postID: string;
@@ -52,20 +53,20 @@ const Comment = ({ postID }: CommentProps) => {
                 ) : (
                     comments?.map((comment: Comments) => (
                         <div key={comment._id} className="p-2">
-                            <div className="flex items-center gap-2 w-full">
+                            <Link to={`/profile/${comment.user._id}`} className="flex items-center gap-2 w-full">
                                 <img
                                     src={comment?.user?.image?.[0] || ""}
                                     alt="User"
                                     className="w-8 h-8 rounded-full border border-gray-300"
                                 />
                                 <div className="w-full">
-                                    <span className="text-sm font-semibold">{comment?.user?.username || "Unknown"}</span>
+                                    <Link to={`/profile/${comment.user._id}`} className="text-sm font-semibold">{comment?.user?.username || "Unknown"}</Link>
                                     <div className="flex items-center justify-between w-full">
-                                        <p className="text-sm text-gray-700 w-full">{comment.comment}</p>
+                                        <p className="text-sm max-w-[400px] w-full">{comment.comment}</p>
                                         {comment.user._id === userID ? <button onClick={() => deleteMutation.mutate(comment._id)}><MdDelete /></button> : null}
                                     </div>
                                 </div>
-                            </div>
+                            </Link>
                         </div>
                     ))
                 )}

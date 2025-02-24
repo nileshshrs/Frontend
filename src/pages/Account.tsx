@@ -13,25 +13,28 @@ import ProfileEdit from '../components/ProfileEdit';
 import SinglePosts from '../components/posts/SinglePosts';
 
 const Account = () => {
-
     const { user } = useAuthContext();
     const { following, refetchFollowing, isFollowingLoading } = useFollowings(user?._id);
     const { followers, refetchFollowers, isFollowersLoading } = useFollowers(user?._id);
-    const { userPosts, isLoading } = usePostsByUser()
-    const [isFollowersOpen, setIsFollowersOpen] = useState(false); // State to control the dialog
-    const [isFollowingOpen, setIsFollowingOpen] = useState(false); // State to control the dialog
+    const { userPosts, isLoading } = usePostsByUser();
+    const [isFollowersOpen, setIsFollowersOpen] = useState(false);
+    const [isFollowingOpen, setIsFollowingOpen] = useState(false);
     const [isEditProfileOpen, setIsEditProfileOpen] = useState(false);
-    const [openSinglePosts, setOpenSinglePosts] = useState(false);
+    const [openSinglePost, setOpenSinglePost] = useState<string | null>(null); // Track the post being opened
 
     const handleFollowersToggle = () => {
         setIsFollowersOpen((prev) => !prev);
     };
+
     const handleFollowingToggle = () => {
         setIsFollowingOpen((prev) => !prev);
     };
+
     const handleEditProfileToggle = () => {
         setIsEditProfileOpen((prev) => !prev);
-    }
+    };
+
+
 
     if (isFollowersLoading && isFollowingLoading) return null;
 
@@ -58,7 +61,7 @@ const Account = () => {
                                     {/* Username and Edit Button */}
                                     <div className="flex gap-5 items-center">
                                         <div className="text-xl hidden font-semibold md:block">
-                                            {user?.fullname ||user?.username}
+                                            {user?.fullname || user?.username}
                                         </div>
 
                                         <Button
@@ -68,7 +71,6 @@ const Account = () => {
                                         >
                                             Edit Profile
                                         </Button>
-
                                     </div>
 
                                     {/* Stats (Posts, Followers, Following) */}
@@ -88,13 +90,11 @@ const Account = () => {
                                         </div>
                                     </div>
                                 </div>
-
                             </section>
-
                         </div>
                         <div className='flex flex-col gap-2 md:hidden'>
                             <div className="px-3 text-lg font-semibold">
-                            {user?.username}
+                                {user?.username}
                             </div>
                             <div className="text-xs bg-muted px-3 py-1 rounded-full w-fit">
                                 {user?.email}
@@ -103,14 +103,13 @@ const Account = () => {
                         <div className='px-3 text-sm md:px-5 md:text-xs h-[16px]'>
                             {user?.bio}
                         </div>
-
                     </div>
                     <section className='border-t mt-5 h-full'>
                         <div className='flex justify-between items-center  border-b px-7 md:hidden'>
                             <div className="pt-2 pb-4">
                                 <div className='flex flex-col items-center justify-center text-sm'>
                                     <span className="font-bold">
-                                        0
+                                        {userPosts.length}
                                     </span> posts
                                 </div>
                             </div>
@@ -134,25 +133,25 @@ const Account = () => {
                                 <GrGrid className='text-blue-500 md:text-inherit' /> <span className='hidden md:block'>POSTS</span>
                             </div>
                         </div>
-                        {/* you fix this and show this if there are no posts from users*/}
                         <div className='h-full flex items-center'>
                             {isLoading ? <Loader /> : userPosts?.length > 0 ?
                                 <div className="grid grid-cols-3 max-w-[900px]">
                                     {
-                                        userPosts.map((posts: posts) => {
+                                        userPosts.map((post: posts) => {
                                             return (
-                                                <div key={posts._id} className="flex justify-center border max-w-[300px] max-h-[300px] items-center" onClick={()=>setOpenSinglePosts(!openSinglePosts)}>
+                                                <div key={post._id} className="flex justify-center border max-w-[300px] max-h-[300px] items-center"
+                                                    onClick={() => setOpenSinglePost(post._id!)}>
                                                     <img
-                                                        src={posts.image[0]}
+                                                        src={post.image[0]}
                                                         alt=""
                                                         className="w-full h-full max-w-[300px] max-h-[300px] object-cover aspect-square"
                                                     />
-                                                    <SinglePosts id={posts._id!} isOpen={openSinglePosts} setIsOpen={setOpenSinglePosts} />
+                                                    {openSinglePost === post._id &&
+                                                        <SinglePosts id={post._id!} isOpen={openSinglePost !== null} setIsOpen={setOpenSinglePost} />}
                                                 </div>
                                             )
                                         })
                                     }
-
                                 </div> :
                                 <div className='flex flex-col items-center justify-center gap-1 p-5 h-full'>
                                     <div className='rounded-full border-2 border-custom-border p-7'>
@@ -169,7 +168,6 @@ const Account = () => {
                         </div>
                     </section>
                 </div>
-
             </div>
             <Followers
                 open={isFollowersOpen}
@@ -187,8 +185,7 @@ const Account = () => {
             />
             <ProfileEdit open={isEditProfileOpen} onOpenChange={setIsEditProfileOpen} />
         </>
-
-    )
-}
+    );
+};
 
 export default Account;

@@ -19,7 +19,7 @@ import SinglePosts from "../components/posts/SinglePosts"
 const UserProfile = () => {
     const { user } = useAuthContext();
     const { id } = useParams();
-    const [openSinglePosts, setOpenSinglePosts] = useState(false);
+    const [openSinglePosts, setOpenSinglePosts] = useState<string | null>(null); // Change to store post ID
 
     const { fetchedUser, isLoading: fetchUserIsLoading, refetch } = useFetchUserByID(id!);
     const { following, refetchFollowing, isFollowingLoading } = useFollowings(id!);
@@ -40,7 +40,6 @@ const UserProfile = () => {
             refetchFollowers();
             refetchFollowing();
             refetch();
-
         },
         onError: (error: any) => {
             console.log("Error following user:", error);
@@ -60,153 +59,159 @@ const UserProfile = () => {
         setIsFollowingOpen((prev) => !prev);
     };
 
-    // console.log(followers, "follower")
-    // console.log(following, "follwing")
+    // Check if the user is loading before rendering the UI
+    if (fetchUserIsLoading || isFollowersLoading || isFollowingLoading) return null;
 
-
-    if (fetchUserIsLoading && isFollowersLoading && isFollowingLoading) return null;
     return (
-
-        <div className='min-h-screen'>
+        <div className="min-h-screen">
             <div className="h-full mx-auto py-20 lg:w-[70%] grid gap-5 lg:py-10">
-                <div className='px-5 flex flex-col gap-5'>
+                <div className="px-5 flex flex-col gap-5">
                     <div className="flex">
                         {/* Profile Picture Section */}
                         <section className="mr-5">
                             <div>
                                 <img
                                     src={fetchedUser?.image[0]}
-                                    alt=""
+                                    alt="Profile"
                                     className="w-[75px] h-[75px] rounded-full md:w-[150px] md:h-[150px]"
                                 />
                             </div>
                         </section>
 
                         {/* User Info Section */}
-                        <section className="ml-5 ">
+                        <section className="ml-5">
                             <div className="flex flex-col gap-4 items-start">
                                 {/* Username and Edit Button */}
                                 <div className="flex gap-5 items-center">
                                     <div className="text-xl hidden font-semibold md:block">
-                                        {fetchedUser?.fullname||fetchedUser?.username}
+                                        {fetchedUser?.fullname || fetchedUser?.username}
                                     </div>
-                                    {
-                                        isFollower ? <Button
-                                            variant={"ghost"}
+                                    {isFollower ? (
+                                        <Button
+                                            variant="ghost"
                                             className="w-[120px] bg-muted text-sm font-semibold"
                                             onClick={() =>
-                                                unfollowMutation({ followerID: user?._id!, followingID: id! })
+                                                unfollowMutation({
+                                                    followerID: user?._id!,
+                                                    followingID: id!,
+                                                })
                                             }
                                         >
                                             unfollow
-                                        </Button> : <Button
-                                            variant={"ghost"}
+                                        </Button>
+                                    ) : (
+                                        <Button
+                                            variant="ghost"
                                             className="w-[120px] bg-muted text-sm font-semibold"
                                             onClick={() => followMutation(id!)}
                                         >
                                             follow
                                         </Button>
-                                    }
+                                    )}
                                 </div>
 
                                 {/* Stats (Posts, Followers, Following) */}
                                 <div className="hidden gap-10 md:flex">
-                                    <div><span className="font-bold">{userPosts.length}</span> posts</div>
-                                    <div><button onClick={handleFollowersToggle}><span className="font-bold">{followers.length}</span> followers</button></div>
-                                    <div><button onClick={handleFollowingToggle}><span className="font-bold">{following.length}</span> following</button></div>
+                                    <div>
+                                        <span className="font-bold">{userPosts.length}</span> posts
+                                    </div>
+                                    <div>
+                                        <button onClick={handleFollowersToggle}>
+                                            <span className="font-bold">{followers.length}</span> followers
+                                        </button>
+                                    </div>
+                                    <div>
+                                        <button onClick={handleFollowingToggle}>
+                                            <span className="font-bold">{following.length}</span> following
+                                        </button>
+                                    </div>
                                 </div>
 
                                 {/* User's Full Name and Email */}
                                 <div className="hidden flex-col gap-2 md:flex">
-                                    <div className="">
-                                        @{fetchedUser?.username}
-                                    </div>
+                                    <div className="">@{fetchedUser?.username}</div>
                                     <div className="text-xs bg-muted px-3 py-1 rounded-full">
                                         {fetchedUser?.email}
                                     </div>
                                 </div>
-
                             </div>
-
                         </section>
-
                     </div>
-                    <div className='flex flex-col gap-2 md:hidden'>
-                        <div className="px-3 text-lg font-semibold">
-                            {fetchedUser?.username}
-                        </div>
+                    <div className="flex flex-col gap-2 md:hidden">
+                        <div className="px-3 text-lg font-semibold">{fetchedUser?.username}</div>
                         <div className="text-xs bg-muted px-3 py-1 rounded-full w-fit">
                             {fetchedUser?.email}
                         </div>
                     </div>
-                    <div className='px-3 text-sm md:px-5 md:text-xs h-[16px]'>
+                    <div className="px-3 text-sm md:px-5 md:text-xs h-[16px]">
                         {fetchedUser?.bio}
                     </div>
-
                 </div>
-                <section className='border-t mt-5 h-full'>
-                    <div className='flex justify-between items-center  border-b px-7 md:hidden'>
+
+                <section className="border-t mt-5 h-full">
+                    <div className="flex justify-between items-center border-b px-7 md:hidden">
                         <div className="pt-2 pb-4">
-                            <div className='flex flex-col items-center justify-center text-sm'>
-                                <span className="font-bold">
-                                    0
-                                </span> posts
+                            <div className="flex flex-col items-center justify-center text-sm">
+                                <span className="font-bold">0</span> posts
                             </div>
                         </div>
                         <div className="pt-2 pb-4">
-                            <button onClick={handleFollowersToggle} className='flex flex-col items-center justify-center text-sm'>
-                                <span className="font-bold">
-                                    {followers.length}
-                                </span> followers
+                            <button onClick={handleFollowersToggle} className="flex flex-col items-center justify-center text-sm">
+                                <span className="font-bold">{followers.length}</span> followers
                             </button>
                         </div>
                         <div className="pt-2 pb-4">
-                            <button onClick={handleFollowingToggle} className='flex flex-col items-center justify-center text-sm'>
-                                <span className="font-bold">
-                                    {following.length}
-                                </span> following
+                            <button onClick={handleFollowingToggle} className="flex flex-col items-center justify-center text-sm">
+                                <span className="font-bold">{following.length}</span> following
                             </button>
                         </div>
                     </div>
-                    <div className='w-full border-b md:border-none'>
+                    <div className="w-full border-b md:border-none">
                         <div className="inline-flex items-center gap-3 p-4 text-lg min-w-[200px] justify-center border-t border-custom-border font-semibold md:w-auto md:text-base">
-                            <GrGrid className='text-blue-500 md:text-inherit' /> <span className='hidden md:block'>POSTS</span>
+                            <GrGrid className="text-blue-500 md:text-inherit" /> <span className="hidden md:block">POSTS</span>
                         </div>
                     </div>
-                    {/* you fix this and show this if there are no posts from users*/}
-                    <div className='h-full'>
-                        {isLoading ? <Loader /> : userPosts?.length > 0 ?
+
+                    {/* User's Posts */}
+                    <div className="h-full">
+                        {isLoading ? (
+                            <Loader />
+                        ) : userPosts?.length > 0 ? (
                             <div className="grid grid-cols-3 gap-1">
-                                {
-                                    userPosts.map((posts: posts) => {
-                                        return (
-                                            <div key={posts._id} className="flex justify-center" onClick={() => setOpenSinglePosts(!openSinglePosts)}>
-                                                <img
-                                                    src={posts.image[0]}
-                                                    alt=""
-                                                    className="w-full h-full  object-cover aspect-square"
-                                                />
-                                                <SinglePosts id={posts._id!} isOpen={openSinglePosts} setIsOpen={setOpenSinglePosts} />
-                                            </div>
-                                        )
-                                    })
-                                }
-                            </div> :
-                            <div className='flex flex-col items-center justify-center gap-1 p-5 h-full'>
-                                <div className='rounded-full border-2 border-custom-border p-7'>
-                                    <IoCameraOutline className='text-5xl' />
+                                {userPosts.map((post: posts) => {
+                                    return (
+                                        <div
+                                            key={post._id}
+                                            className="flex justify-center"
+                                            onClick={() => setOpenSinglePosts(post._id!)} // Open single post view
+                                        >
+                                            <img
+                                                src={post.image[0]}
+                                                alt="Post"
+                                                className="w-full h-full object-cover aspect-square"
+                                            />
+                                        </div>
+                                    );
+                                })}
+                            </div>
+                        ) : (
+                            <div className="flex flex-col items-center justify-center gap-1 p-5 h-full">
+                                <div className="rounded-full border-2 border-custom-border p-7">
+                                    <IoCameraOutline className="text-5xl" />
                                 </div>
-                                <div className='font-extrabold text-4xl'>
-                                    Share Moments
-                                </div>
-                                <div className='font-light text-sm text-center'>
+                                <div className="font-extrabold text-4xl">Share Moments</div>
+                                <div className="font-light text-sm text-center">
                                     When you share your first moments, they will appear in your profile.
                                 </div>
                             </div>
-                        }
+                        )}
                     </div>
                 </section>
             </div>
+            {/* Show the single post view when a post is clicked */}
+            {openSinglePosts && (
+                <SinglePosts id={openSinglePosts} isOpen={true} setIsOpen={setOpenSinglePosts} />
+            )}
             <Followers
                 open={isFollowersOpen}
                 onOpenChange={setIsFollowersOpen}
@@ -221,8 +226,8 @@ const UserProfile = () => {
                 refetchFollowers={refetchFollowers}
                 refetchFollowing={refetchFollowing}
             />
-
         </div>
-    )
-}
-export default UserProfile
+    );
+};
+
+export default UserProfile;

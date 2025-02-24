@@ -15,7 +15,9 @@ import SinglePosts from "./SinglePosts";
 const Posts = () => {
   const { user } = useAuthContext();
   const [likesLoading, setLikesLoading] = useState(false);
-  const [openSinglePosts, setOpenSinglePosts] = useState(false);
+
+  // Track which post is open
+  const [selectedPostID, setSelectedPostID] = useState<string | null>(null);
 
   const {
     data,
@@ -34,8 +36,6 @@ const Posts = () => {
     adaptiveHeight: true,
   };
 
-
-
   return (
     <div className="w-full max-w-[470px] mx-auto px-4 sm:px-0 sm:mx-0">
       {(isLoading || likesLoading) && (
@@ -47,20 +47,21 @@ const Posts = () => {
       {data?.pages.map((page, index) => (
         <div key={index} className="w-full">
           {page.map((post: fetchedPost) => (
+
             <div key={post._id} className="w-full mb-10 border-b-2">
               <Link to="" className="w-full py-4">
                 <div className="flex items-center justify-between w-full h-full">
                   <div className="flex gap-5 mb-5 h-full">
-                    <div>
+                    <Link to={`/profile/${post.user._id}`}>
                       <img
                         src={post.user.image ||
                           "https://play-lh.googleusercontent.com/jInS55DYPnTZq8GpylyLmK2L2cDmUoahVacfN_Js_TsOkBEoizKmAl5-p8iFeLiNjtE=w526-h296-rw"}
                         alt=""
                         className="h-[50px] w-[50px] rounded-full border-primary border-2"
                       />
-                    </div>
+                    </Link>
                     <div>
-                      <div className="capitalize font-bold mb-1">{post.user.username}</div>
+                      <Link to={`/profile/${post.user._id}`} className="capitalize font-bold mb-1">{post.user.username}</Link>
                       <div className="text-xs text-muted-foreground">{formatTimeAgo(post.createdAt)}</div>
                     </div>
                   </div>
@@ -87,7 +88,12 @@ const Posts = () => {
                 </Slider>
               </Link>
               <div className="flex flex-col gap-1 mt-6 mb-2">
-                <Likes postID={post._id} setLikesLoading={setLikesLoading} isOpen={openSinglePosts} setIsOpen={setOpenSinglePosts} />
+                <Likes
+                  postID={post._id}
+                  setLikesLoading={setLikesLoading}
+                  isOpen={selectedPostID === post._id}
+                  setIsOpen={() => setSelectedPostID(selectedPostID === post._id ? null : post._id)}
+                />
                 {post.content !== "" && (
                   <p>
                     <span className="font-bold capitalize">
@@ -96,7 +102,10 @@ const Posts = () => {
                   </p>
                 )}
               </div>
-              <SinglePosts id={post._id} isOpen={openSinglePosts} setIsOpen={setOpenSinglePosts} />
+              {/* Ensure SinglePosts opens only for the correct post */}
+              {selectedPostID === post._id && (
+                <SinglePosts id={post._id} isOpen={true} setIsOpen={() => setSelectedPostID(null)} />
+              )}
             </div>
           ))}
         </div>

@@ -2,6 +2,8 @@ import { useEffect } from 'react';
 import { useAuthContext } from '../../context/AuthContext';
 import { useLikesByPosts, useToggleLikeMutation } from '../../hooks/useLikes';
 import { FaRegComment, FaHeart, FaRegHeart } from "react-icons/fa";
+import { getComments } from '../../api/api';
+import { useQuery } from '@tanstack/react-query';
 
 interface LikeProps {
     postID: string,
@@ -16,8 +18,14 @@ const Likes = ({ postID, setLikesLoading, isOpen, setIsOpen }: LikeProps) => {
     const { data, refetch, isLoading } = useLikesByPosts(postID);
     const { likeMutation } = useToggleLikeMutation(postID);
 
+    const { data: comments } = useQuery({
+        queryKey: ["comments", postID],
+        queryFn: () => getComments(postID),
+    });
+
+
     // Log to debug
-    console.log(data);
+
 
     // Set loading state whenever isLoading changes
     useEffect(() => {
@@ -49,6 +57,9 @@ const Likes = ({ postID, setLikesLoading, isOpen, setIsOpen }: LikeProps) => {
             </div>
             <div className="font-bold">
                 {data?.likeCount} Likes
+            </div>
+            <div className='underline cursor-pointer' onClick={()=>{setIsOpen(!isOpen)}}>
+                {comments?.length === 0 ? "view comments" : `view all ${comments?.length} comments`}
             </div>
         </>
     );
