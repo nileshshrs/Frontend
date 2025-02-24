@@ -10,40 +10,40 @@ export const useInfinitePosts = () => {
     hasNextPage,
     isFetchingNextPage,
     isLoading,
-    refetch
+    refetch,
   } = useInfiniteQuery(
-    ["posts"], // Query key
-    ({ pageParam = 1 }) => fetchPosts(pageParam), // Fetch function with pagination
+    ["posts"],
+    ({ pageParam = 1 }) => fetchPosts(pageParam),
     {
-      getNextPageParam: (lastPage, pages) => {
-        // If lastPage has posts, go to the next page, otherwise return undefined
-        return lastPage.length > 0 ? pages.length + 1 : undefined;
-      },
+      // If the last page returns exactly 5 posts, assume there might be more
+      getNextPageParam: (lastPage, pages) =>
+        lastPage.length === 5 ? pages.length + 1 : undefined,
     }
   );
 
-  // Handle infinite scroll
   const handleScroll = () => {
-    const bottom =
-      window.innerHeight + window.scrollY >= document.documentElement.scrollHeight;
-    if (bottom && hasNextPage && !isFetchingNextPage) {
+    // Trigger fetch when the user is within 100px of the bottom
+    if (
+      window.innerHeight + window.scrollY >=
+        document.documentElement.scrollHeight - 100 &&
+      hasNextPage &&
+      !isFetchingNextPage
+    ) {
       fetchNextPage();
     }
   };
 
-  // Attach scroll event listener when component mounts
   useEffect(() => {
     window.addEventListener("scroll", handleScroll);
-    return () => {
-      window.removeEventListener("scroll", handleScroll);
-    };
+    return () => window.removeEventListener("scroll", handleScroll);
   }, [hasNextPage, isFetchingNextPage, fetchNextPage]);
 
   return {
     data,
+    fetchNextPage,
     hasNextPage,
     isFetchingNextPage,
     isLoading,
-    refetch
+    refetch,
   };
 };

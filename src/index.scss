@@ -3,9 +3,12 @@
 @tailwind components;
 @tailwind utilities;
 
+* {}
+
 @layer base {
   :root {
-    --background: 0 0% 100%;  /* Light mode background */
+    --background: 0 0% 100%;
+    /* Light mode background */
     --foreground: 0 0% 3.9%;
     --card: 0 0% 100%;
     --card-foreground: 0 0% 3.9%;
@@ -35,7 +38,8 @@
   }
 
   .dark {
-    --background: 0 0% 7%;  /* Dark mode background */
+    --background: 0 0% 7%;
+    /* Dark mode background */
     --foreground: 0 0% 98%;
     --appbar: 0 0% 11%;
     --card: 0 0% 3.9%;
@@ -68,10 +72,34 @@
   * {
     @apply transition-colors;
     @apply border-border;
+
+    /* Scrollbar Styles */
+    ::-webkit-scrollbar {
+      width: 5px;
+    }
+
+    ::-webkit-scrollbar-thumb {
+      background-color: hsl(220, 10%, 30%);
+      /* Dark Slate */
+      border: 0px solid hsl(220, 15%, 20%);
+      /* Navy */
+      border-radius: 10px;
+    }
+
+    ::-webkit-scrollbar-track {
+      background: #ffff;
+      /* Navy */
+    }
+
+    ::selection {
+      background-color: hsl(220, 25%, 15%);
+      /* Lightest Navy */
+      color: hsl(220, 60%, 80%);
+      /* Lightest Slate */
+    }
   }
 
   body {
     @apply bg-background text-foreground;
   }
-
 }

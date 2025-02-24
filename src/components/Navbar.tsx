@@ -6,10 +6,13 @@ import Settings from "./Settings";
 import { useNotifications } from "../hooks/useNotifications";
 import { useConversations } from "../hooks/useConversation";
 import { useTheme } from "../context/ThemeContext";
+import { MdDashboard } from "react-icons/md";
+import { useAuthContext } from "../context/AuthContext";
 
 const Navbar = ({ isCollapsed, onNotificationToggle, onSearchToggle, setCollapsed, onOpenChange }: toggler) => {
 
     const { theme } = useTheme();
+    const { user } = useAuthContext()
 
     const location = useLocation();
     const pathname = location.pathname;
@@ -24,11 +27,11 @@ const Navbar = ({ isCollapsed, onNotificationToggle, onSearchToggle, setCollapse
         setCollapsed((prev: boolean) => !prev); // Correctly toggle collapse state
     };
     const { unreadCount } = useNotifications()
-    const {messageUnreadCount}  = useConversations()
+    const { messageUnreadCount } = useConversations()
 
     const logoSrc = theme === 'light' ? '/image/nav-light.png' : '/image/nav-dark.png';
     const shutter = theme === 'light' ? '/image/shutter-dark.png' : '/image/shutter-light.png';
-    
+
 
 
     return (
@@ -36,14 +39,26 @@ const Navbar = ({ isCollapsed, onNotificationToggle, onSearchToggle, setCollapse
             className={`sm:grid min-h-screen h-full hidden top-0 left-0 place-items-center py-7 border-r z-20 
             ${isCollapsed ? "max-w-[70px]" : "max-w-[300px] px-5"} transition-all duration-300 w-full sticky top-0 left-0 bg-background`}
         >
-            <ul className="h-full flex flex-col justify-start gap-5 items-center p-0 content-center w-full">
+            <ul className="h-full flex flex-col justify-start gap-3 items-center p-0 content-center w-full">
                 {/* Logo */}
-                <li className={isCollapsed? "mb-5": "mb-5 w-full"}>
-                    {isCollapsed ? <img src={shutter} className="w-[40px] "/> : <img src={logoSrc} />}
+                <li className={isCollapsed ? "mb-5" : "mb-5 w-full"}>
+                    <Link to="/"> {isCollapsed ? <img src={shutter} className="w-[40px] " /> : <img src={logoSrc} />}</Link>
                 </li>
+                {
+                    user && user.role === 'admin' && <li className="w-full mt-5 mb-3 p-3 rounded-md hover:bg-muted">
+                        <Link
+                            to="/dashboard"
+                            className={`w-full inline-flex gap-5 items-center ${isCollapsed ? "justify-center" : "justify-start"}`}
+                        >
+                            <MdDashboard className="text-2xl" />
+                            {!isCollapsed && <span className={pathname === '/dashboard' ? 'font-bold' : ''}>Dashboard</span>}
+                        </Link>
+                    </li>
+                }
+
 
                 {/* Home Link */}
-                <li className="w-full mt-5 mb-3">
+                <li className={user && user.role ==='admin' ? "w-full mb-3 p-3 rounded-md hover:bg-muted": "w-full mb-3 mt-5 p-3 rounded-md hover:bg-muted"}>
                     <Link
                         to="/"
                         className={`w-full inline-flex gap-5 items-center ${isCollapsed ? "justify-center" : "justify-start"}`}
@@ -54,7 +69,7 @@ const Navbar = ({ isCollapsed, onNotificationToggle, onSearchToggle, setCollapse
                 </li>
 
                 {/* Search Button */}
-                <li className="w-full mb-3">
+                <li className="w-full mb-3  hover:bg-muted p-3 rounded-md">
                     <span
                         onClick={toggleSearch}
                         className={`w-full inline-flex gap-5 items-center ${isCollapsed ? "justify-center" : "justify-start"}`}
@@ -65,7 +80,7 @@ const Navbar = ({ isCollapsed, onNotificationToggle, onSearchToggle, setCollapse
                 </li>
 
                 {/* Messages Link */}
-                <li className="w-full mb-3 inline-flex items-center justify-between relative">
+                <li className="w-full mb-3 inline-flex items-center justify-between relative  hover:bg-muted p-3 rounded-md">
                     <Link
                         to="/messages"
                         className={`
@@ -89,7 +104,7 @@ const Navbar = ({ isCollapsed, onNotificationToggle, onSearchToggle, setCollapse
                 </li>
 
                 {/* Notifications Button */}
-                <li className="w-full mb-3 inline-flex items-center justify-between relative">
+                <li className="w-full mb-3 inline-flex items-center justify-between relative  hover:bg-muted p-3 rounded-md">
                     <span
                         onClick={toggleNotification}
                         className={`w-full inline-flex gap-5 items-center cursor-pointer ${isCollapsed ? "justify-center" : "justify-start"}`}
@@ -112,7 +127,7 @@ const Navbar = ({ isCollapsed, onNotificationToggle, onSearchToggle, setCollapse
 
 
                 {/* Plus Icon */}
-                <li className="w-full mb-3">
+                <li className="w-full mb-3  hover:bg-muted p-3 rounded-md">
                     <div
                         onClick={() => onOpenChange(true)}
                         className={
@@ -125,7 +140,7 @@ const Navbar = ({ isCollapsed, onNotificationToggle, onSearchToggle, setCollapse
                 </li>
 
                 {/* User Profile Link */}
-                <li className="w-full mb-3">
+                <li className="w-full mb-3  hover:bg-muted p-3 rounded-md">
                     <Link
                         to="/account"
                         className={

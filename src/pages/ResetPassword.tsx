@@ -44,7 +44,7 @@ const ResetPassword = () => {
   const { mutate, isSuccess } = useMutation({
     mutationFn: async (data: any) => { resetPassword(data) },
     onSuccess: () => {
-
+      console.log("success")
     },
     onError: (error: any) => {
       console.error('Reset password failed:', error);
@@ -77,8 +77,8 @@ const ResetPassword = () => {
         isSuccess ? <Card className="max-w-sm w-full flex items-center justify-center">
           <CardContent>
             <CardHeader className="flex-col items-center justify-center gap-5">
-              <CardTitle>Invalid link .</CardTitle>
-              <CardDescription className='text-center'>Your password link may have expired?.</CardDescription>
+              <CardTitle>Success!</CardTitle>
+              <CardDescription className='text-center'>Password reset successful.</CardDescription>
             </CardHeader>
             <CardFooter className="flex items-center justify-center">
               <Link to="/sign-in" className="text-primary text-sm font-bold" replace>

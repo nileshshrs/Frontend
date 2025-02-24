@@ -12,10 +12,12 @@ import { FaMoon } from "react-icons/fa";
 import { MdLightMode } from "react-icons/md";
 import { Link } from "react-router-dom";
 import { IoSettings } from "react-icons/io5";
+import { useLogout } from "../hooks/useLogout";
 
 
 const Settings = () => {
     const { theme, toggleTheme } = useTheme()
+    const { logout } = useLogout()
 
     return (
         <DropdownMenu>
@@ -38,6 +40,7 @@ const Settings = () => {
                 <DropdownMenuSeparator />
                 <DropdownMenuCheckboxItem
                     className="font-semibold"
+                    onClick={() => logout()}
                 >
                     logout
                 </DropdownMenuCheckboxItem>

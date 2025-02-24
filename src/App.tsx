@@ -46,23 +46,30 @@ function App() {
             )}
 
             <Routes>
-
                 <Route path="/" element={<Main />}>
+                    {/* Index route */}
                     <Route index element={<Home />} />
-                    <Route path="/dashboard" element={<Dashboard />} />
+
+                    {/* Protected dashboard route as a relative path */}
+                    <Route
+                        path="dashboard"
+                        element={
+                            user && user.role === "admin" ? <Dashboard /> : <Navigate to="/" replace />
+                        }
+                    />
+
                     {user ? (
                         <>
-
-                            <Route path="/messages/" element={<Messages />}>
+                            <Route path="messages" element={<Messages />}>
                                 <Route index element={<Conversation />} />
                                 <Route path=":id" element={<Message />} />
                             </Route>
-                            <Route path="/sessions" element={<Sessions />} />
-                            <Route path="/account" element={<Account />} />
-                            <Route path="/profile/:id" element={<UserProfile />} />
+                            <Route path="sessions" element={<Sessions />} />
+                            <Route path="account" element={<Account />} />
+                            <Route path="profile/:id" element={<UserProfile />} />
                         </>
                     ) : (
-                        <Route path="/messages" element={<Navigate to="/sign-in" />} />
+                        <Route path="messages" element={<Navigate to="/sign-in" />} />
                     )}
                 </Route>
 
@@ -84,6 +91,7 @@ function App() {
 
                 <Route path="/email-verification/:code" element={<VerifyEmail />} />
             </Routes>
+
         </div>
     );
 }

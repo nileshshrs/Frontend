@@ -22,7 +22,7 @@ export type toggler = {
 export interface Participant {
     _id: string;
     username: string;
-    image?: string;
+    image?: string [] | undefined;
 }
 
 
@@ -55,6 +55,7 @@ export type User = {
     username: string;
     verified: boolean;
     image: string;  // Assuming it's a URL or empty string
+    role: string,
     __v: number;
 
 };

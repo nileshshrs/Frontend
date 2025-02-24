@@ -115,21 +115,21 @@ const Message = () => {
   }
 
   return (
-    <main className="flex flex-col min-h-screen h-full">
+    <main className="flex flex-col min-h-screen h-full pb-10 sm:pb-0">
       <div>
         <div className="flex justify-between items-center p-7">
           <div className="flex items-center gap-5">
             <img
               src={recipientImage || "https://play-lh.googleusercontent.com/jInS55DYPnTZq8GpylyLmK2L2cDmUoahVacfN_Js_TsOkBEoizKmAl5-p8iFeLiNjtE=w526-h296-rw"}
               alt={recipientName ?? "username"}
-              className="h-50 w-50 rounded-full"
+              className="h-50 w-50 rounded-full aspect-square"
               width={"50px"}
               height={"50px"}
             />
             <div>
               <h2 className="capitalize font-bold">{recipientName}</h2>
               <div className="inline-flex items-center gap-1">
-                {isRecipientOnline(recipientId) ? <FaCircle className="text-md" /> : <FaRegCircle className="text-md" />}{" "}
+                {isRecipientOnline(recipientId) ? <FaCircle className="text-md text-green-300" /> : <FaRegCircle className="text-md text-red-300 " />}{" "}
                 {isRecipientOnline(recipientId) ? "online" : "offline"}
               </div>
             </div>
@@ -155,7 +155,7 @@ const Message = () => {
               <img
                 src={senderImage}
                 alt={senderName}
-                className="h-50 w-50 rounded-full"
+                className="h-50 w-50 rounded-full aspect-square"
                 width={"50px"}
                 height={"50px"}
               />

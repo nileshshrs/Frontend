@@ -9,22 +9,44 @@ import { useAuthContext } from "../../context/AuthContext";
 import { FaEllipsisH } from "react-icons/fa";
 import { Link } from "react-router-dom";
 import Likes from "./Likes";
-import { useState } from "react";
+import { useState, useEffect, useRef } from "react";
 import SinglePosts from "./SinglePosts";
+import { useTheme } from "../../context/ThemeContext";
 
 const Posts = () => {
   const { user } = useAuthContext();
-  const [likesLoading, setLikesLoading] = useState(false);
+  const { theme } = useTheme();
+  const noposts = theme === 'light' ? '/image/noposts.png' : '/image/nopostsdark.png';
 
-  // Track which post is open
+  const [likesLoading, setLikesLoading] = useState(false);
   const [selectedPostID, setSelectedPostID] = useState<string | null>(null);
 
-  const {
-    data,
-    hasNextPage,
-    isFetchingNextPage,
-    isLoading,
-  } = useInfinitePosts();
+  const { data, hasNextPage, fetchNextPage, isFetchingNextPage, isLoading } = useInfinitePosts();
+
+  // Create a ref for the sentinel element that triggers loading more posts.
+  const loadMoreRef = useRef<HTMLDivElement | null>(null);
+
+  // Use Intersection Observer to trigger fetching the next page when the sentinel is in view.
+  useEffect(() => {
+    if (!loadMoreRef.current || !hasNextPage || isFetchingNextPage) return;
+
+    const observer = new IntersectionObserver(
+      (entries) => {
+        if (entries[0].isIntersecting) {
+          fetchNextPage();
+        }
+      },
+      { threshold: 1.0 }
+    );
+
+    observer.observe(loadMoreRef.current);
+
+    return () => {
+      if (loadMoreRef.current) {
+        observer.unobserve(loadMoreRef.current);
+      }
+    };
+  }, [hasNextPage, isFetchingNextPage, fetchNextPage]);
 
   const settings = {
     dots: true,
@@ -39,51 +61,66 @@ const Posts = () => {
   return (
     <div className="w-full max-w-[470px] mx-auto px-4 sm:px-0 sm:mx-0">
       {(isLoading || likesLoading) && (
-        <div className="w-full flex items-center justify-center">
+        <div className="w-full flex items-center justify-center py-4">
           <Loader />
         </div>
       )}
 
-      {data?.pages.map((page, index) => (
-        <div key={index} className="w-full">
+      {data?.pages.map((page, pageIndex) => (
+        <div key={pageIndex} className="w-full">
           {page.map((post: fetchedPost) => (
-
             <div key={post._id} className="w-full mb-10 border-b-2">
-              <Link to="" className="w-full py-4">
-                <div className="flex items-center justify-between w-full h-full">
-                  <div className="flex gap-5 mb-5 h-full">
+              <Link to={`/post/${post._id}`} className="w-full py-4">
+                <div className="flex items-center justify-between">
+                  <div className="flex gap-5">
                     <Link to={`/profile/${post.user._id}`}>
                       <img
-                        src={post.user.image ||
-                          "https://play-lh.googleusercontent.com/jInS55DYPnTZq8GpylyLmK2L2cDmUoahVacfN_Js_TsOkBEoizKmAl5-p8iFeLiNjtE=w526-h296-rw"}
-                        alt=""
+                        src={
+                          post.user.image ||
+                          "https://via.placeholder.com/50"
+                        }
+                        alt={`${post.user.username} profile`}
                         className="h-[50px] w-[50px] rounded-full border-primary border-2"
                       />
                     </Link>
                     <div>
-                      <Link to={`/profile/${post.user._id}`} className="capitalize font-bold mb-1">{post.user.username}</Link>
-                      <div className="text-xs text-muted-foreground">{formatTimeAgo(post.createdAt)}</div>
+                      <Link to={`/profile/${post.user._id}`} className="capitalize font-bold mb-1">
+                        {post.user.username}
+                      </Link>
+                      <div className="text-xs text-muted-foreground">
+                        {formatTimeAgo(post.createdAt)}
+                      </div>
                     </div>
                   </div>
-
                   {post.user._id === user?._id && (
-                    <div className="h-full flex items-center justify-end ml-auto mb-5">
+                    <div className="flex items-center">
                       <FaEllipsisH className="cursor-pointer" />
                     </div>
                   )}
                 </div>
 
-                <Slider {...settings} className="w-full border bg-transparent rounded-lg">
-                  {Array.isArray(post.image) && post.image.length === 1 ? (
-                    <div className="relative w-full sm:w-[300px] h-[585px] sm:h-[585px] rounded-lg overflow-hidden">
-                      <img src={post.image[0]} alt="" className="w-full h-full object-contain" />
-                    </div>
-                  ) : (
-                    Array.isArray(post.image) && post.image.map((img: string, index: number) => (
-                      <div key={index} className="relative w-full sm:w-[300px] h-[585px] max-h-[585px] rounded-lg overflow-hidden">
-                        <img src={img} alt="" className="w-full h-full object-contain" />
+                <Slider {...settings} className="w-full border bg-transparent rounded-lg mt-4">
+                  {Array.isArray(post.image) && post.image.length > 0 ? (
+                    post.image.map((img: string, index: number) => (
+                      <div
+                        key={index}
+                        className="relative w-full sm:w-[300px] h-[585px] rounded-lg overflow-hidden"
+                      >
+                        <img
+                          src={img}
+                          alt={`Slide ${index + 1}`}
+                          className="w-full h-full object-contain"
+                        />
                       </div>
                     ))
+                  ) : (
+                    <div className="relative w-full sm:w-[300px] h-[585px] rounded-lg overflow-hidden">
+                      <img
+                        src="https://via.placeholder.com/300x585"
+                        alt="Default"
+                        className="w-full h-full object-contain"
+                      />
+                    </div>
                   )}
                 </Slider>
               </Link>
@@ -92,33 +129,41 @@ const Posts = () => {
                   postID={post._id}
                   setLikesLoading={setLikesLoading}
                   isOpen={selectedPostID === post._id}
-                  setIsOpen={() => setSelectedPostID(selectedPostID === post._id ? null : post._id)}
+                  setIsOpen={() =>
+                    setSelectedPostID(selectedPostID === post._id ? null : post._id)
+                  }
                 />
-                {post.content !== "" && (
+                {post.content && (
                   <p>
                     <span className="font-bold capitalize">
-                      <Link to="">{post.user.username}</Link>
-                    </span> {post.content}
+                      <Link to={`/profile/${post.user._id}`}>{post.user.username}</Link>
+                    </span>{" "}
+                    {post.content}
                   </p>
                 )}
               </div>
-              {/* Ensure SinglePosts opens only for the correct post */}
               {selectedPostID === post._id && (
-                <SinglePosts id={post._id} isOpen={true} setIsOpen={() => setSelectedPostID(null)} />
+                <SinglePosts
+                  id={post._id}
+                  isOpen={true}
+                  setIsOpen={() => setSelectedPostID(null)}
+                />
               )}
             </div>
           ))}
         </div>
       ))}
 
-      {isFetchingNextPage && (
-        <div className="w-full flex items-center justify-center">
-          <Loader />
+      {/* Sentinel element for Intersection Observer */}
+      <div ref={loadMoreRef} className="w-full flex items-center justify-center py-4">
+        {isFetchingNextPage && <Loader />}
+      </div>
+
+      {!hasNextPage && (
+        <div className="text-center py-4 text-gray-500">
+          <img src={noposts} alt="" />
         </div>
       )}
-
-      {!hasNextPage && <div>No more posts</div>}
-
     </div>
   );
 };

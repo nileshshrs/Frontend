@@ -15,7 +15,6 @@ const Messages = () => {
         setIsCreateChatOpen((prev) => !prev);
     };
 
-    console.log(conversations);
     return (
         <div className="flex h-screen">
             {/* Left Column: Conversations List, only show if there are conversations */}
@@ -31,28 +30,39 @@ const Messages = () => {
                     <div className="flex-1 overflow-y-auto max-h-screen ">
                         <div className="flex flex-col h-full ">
                             {conversations.map((conversation) => {
-                                const isRead = conversation.read ===user?._id;
+                                // Ensure participants is defined and has at least 2 items
+                                const participants = conversation.participants ?? [];
+                                if (participants.length < 2) {
+                                    return null; // Skip this conversation if participants are missing or insufficient
+                                }
+
+                                const isRead = conversation.read === user?._id;
+
                                 return (
                                     <Link
                                         to={conversation._id}
                                         key={conversation._id}
-                                        className={isRead ? `transition bg-muted min-h-[90px] pl-7 py-5 pr-1 h-[90px] w-full flex items-center md:hover:bg-muted`: `transition min-h-[90px] pl-7 py-5 pr-1 h-[90px] w-full flex items-center md:hover:bg-muted`}
+                                        className={isRead ? `transition bg-muted min-h-[90px] pl-1 py-5 pr-1 h-[90px] w-full flex items-center md:hover:bg-muted md:pl-7` : `transition min-h-[90px] md:pl-7 pl-1 py-5 pr-1 h-[90px] w-full flex items-center md:hover:bg-muted`}
                                     >
                                         <div className="flex w-full items-center gap-7 h-full justify-center">
                                             <div>
                                                 <img
-                                                    src="https://play-lh.googleusercontent.com/jInS55DYPnTZq8GpylyLmK2L2cDmUoahVacfN_Js_TsOkBEoizKmAl5-p8iFeLiNjtE=w526-h296-rw"
+                                                    src={
+                                                        user?._id === participants[0]._id
+                                                            ? participants[1].image?.[0] ?? ''
+                                                            : participants[0].image?.[0] ?? ''
+                                                    }
                                                     alt=""
-                                                    className="min-w-[50px] h-[50px] rounded-full"
+                                                    className="min-w-[50px] h-[50px] rounded-full aspect-square"
                                                 />
                                             </div>
                                             {/* Show only the image on smaller screens (md and sm) */}
                                             <div className="hidden md:flex w-full items-center justify-between">
                                                 <div className="w-full">
-                                                    <div className="text-lg font-semibold">
-                                                        {user?._id === conversation.participants[0]._id
-                                                            ? conversation.participants[1].username
-                                                            : conversation.participants[0].username}
+                                                    <div className="text-lg font-semibold capitalize">
+                                                        {user?._id === participants[0]._id
+                                                            ? participants[1].username
+                                                            : participants[0].username}
                                                     </div>
                                                     <div className="w-full text-muted-foreground">
                                                         {conversation.lastMessage.trim() === ""
@@ -69,7 +79,7 @@ const Messages = () => {
                                             </div>
                                         </div>
                                     </Link>
-                                )
+                                );
                             })}
                         </div>
                     </div>

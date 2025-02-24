@@ -19,7 +19,11 @@ export const useSignin = () => {
                 if (user) {
                     localStorage.setItem("user", JSON.stringify(user));
                     dispatch({ type: "LOGIN", payload: user });
-                    navigate("/"); // Redirect to homepage or dashboard
+                    if (user.roles !== "admin") {
+                        navigate("/");
+                      } else {
+                        navigate("dashboard");
+                      }
                 }
             },
             onError: (error) => {

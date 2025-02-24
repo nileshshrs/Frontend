@@ -58,7 +58,7 @@ const Likes = ({ postID, setLikesLoading, isOpen, setIsOpen }: LikeProps) => {
             <div className="font-bold">
                 {data?.likeCount} Likes
             </div>
-            <div className='underline cursor-pointer' onClick={()=>{setIsOpen(!isOpen)}}>
+            <div className='underline cursor-pointer text-muted-foreground' onClick={()=>{setIsOpen(!isOpen)}}>
                 {comments?.length === 0 ? "view comments" : `view all ${comments?.length} comments`}
             </div>
         </>

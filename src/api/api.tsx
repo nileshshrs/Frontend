@@ -50,7 +50,7 @@ export const verifyEmail = async (verificationCode: string): Promise<any> => {
 };
 
 //forgot password
-export const forgotPassword = async (email: string): Promise<any> => await API.post(`/auth/account-recovery`, email)
+export const forgotPassword = async (data: { email: string }): Promise<any> => await API.post(`/auth/account-recovery`, data)
 //reset password
 export const resetPassword = async (request: {}): Promise<any> => {
     // console.log(request)
@@ -186,12 +186,12 @@ export const updateNotifications = async (): Promise<any> => API.get("/notificat
 
 //likes
 
-export const toggleLikes = async (data: { userID: string, postID: string}): Promise<any> => {
+export const toggleLikes = async (data: { userID: string, postID: string }): Promise<any> => {
     const res = await API.post("/likes/toggle-likes", data)
     return res
 }
 
-export const getPostLikes= async(id: string): Promise<any> => API.get(`/likes/likes-by-post/${id}`)
+export const getPostLikes = async (id: string): Promise<any> => API.get(`/likes/likes-by-post/${id}`)
 
 export const getPostsByID = async (id: string): Promise<any> => {
     console.log(id);
@@ -203,8 +203,8 @@ export const getPostsByID = async (id: string): Promise<any> => {
     }
 };
 
-export const createComments = async(data:{post: string, comment:string}): Promise<any>=> API.post("/comment/create", data);
+export const createComments = async (data: { post: string, comment: string }): Promise<any> => API.post("/comment/create", data);
 
-export const getComments = async(id: string):Promise<any> => API.get(`/comment/get/${id}`);
+export const getComments = async (id: string): Promise<any> => API.get(`/comment/get/${id}`);
 
-export const deleteComments = async(id:string): Promise<any>    => API.delete(`/comment/delete/${id}`);
+export const deleteComments = async (id: string): Promise<any> => API.delete(`/comment/delete/${id}`);
