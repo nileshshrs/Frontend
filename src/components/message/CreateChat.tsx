@@ -76,7 +76,7 @@ export const CreateChat = ({ open, onOpenChange }: CreateChatProps) => {
                                         <div className="flex gap-5 items-center justify-center">
                                             <div>
                                                 <img
-                                                    src="https://play-lh.googleusercontent.com/jInS55DYPnTZq8GpylyLmK2L2cDmUoahVacfN_Js_TsOkBEoizKmAl5-p8iFeLiNjtE=w526-h296-rw"
+                                                    src={connection.image[0]}
                                                     alt=""
                                                     width={"40px"}
                                                     height={"20px"}

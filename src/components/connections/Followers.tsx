@@ -87,8 +87,8 @@ const Followers = ({ open, onOpenChange, followers, refetchFollowing, refetchFol
                                             <div className="flex items-center gap-5">
                                                 <div>
                                                     <img
-                                                        className="w-[45px] h-[45px] rounded-full"
-                                                        src={follow?.follower?.image || "https://avatars.pfptown.com/020/anime-girl-pfp-995.png"}
+                                                        className="w-[45px] h-[45px] rounded-full aspect-square"
+                                                        src={follow?.following?.image || "https://avatars.pfptown.com/020/anime-girl-pfp-995.png"}
                                                         alt=""
                                                     />
                                                 </div>

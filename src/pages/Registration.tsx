@@ -9,6 +9,7 @@ import { useMutation } from "@tanstack/react-query";
 import { FormData } from "../utils/types";
 import { registration } from "../api/api";
 import { useState } from "react";
+import { ToastContainer, toast } from 'react-toastify';
 
 
 
@@ -63,8 +64,21 @@ const Registration = () => {
   const mutation = useMutation({
     mutationFn: async (data: FormData) => registration(data),
     onSuccess: (data) => {
-      console.log(data)
-      navigate("/sign-in", { replace: true })
+      toast.success("Sign Up Successful. Please verify email!", {
+        position: "top-right",
+        style: {
+          height: "25px", // Adjust this value to your desired height
+          fontSize: "13px",
+          margin: 0,
+        },
+      });
+      setTimeout(() => {
+        // console.log("Sign Up Successful. Redirecting to /login...");
+        // Use navigate to navigate to /login
+        // window.location = "/login";
+        navigate("/sign-in", { replace: true })
+      }, 3000);
+
     },
     onError: (error: any) => {
       // console.log(error)
@@ -131,6 +145,7 @@ const Registration = () => {
       <div className='w-full sm:w-80 md:w-96 border-0 md:border-[0.5px] h-auto p-5 gap-3 shadow-lg flex justify-center items-center font-medium text-md'>
         <p>Have an account?</p><Link to="/sign-in" className='text-primary'>sign in</Link>
       </div>
+      <ToastContainer />
     </main>
   )
 }
